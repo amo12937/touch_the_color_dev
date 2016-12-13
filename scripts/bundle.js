@@ -28279,6 +28279,7 @@ var App = (function (_React$Component) {
         var failed = {};
         failed[cellId] = true;
         this.setState({
+          gameState: this.game.state,
           timer: this.game.timer,
           failed: failed
         });
@@ -28297,6 +28298,8 @@ var App = (function (_React$Component) {
     key: "getState",
     value: function getState() {
       return {
+        gameState: this.game.state,
+        gameStates: this.game.states,
         timer: this.game.timer,
         score: this.game.score,
         hints: this.game.hints(),
@@ -28315,7 +28318,13 @@ var App = (function (_React$Component) {
           "div",
           { className: "app_content" },
           _react2["default"].createElement(_componentsScoreHintContainer2["default"], { score: this.state.score, hints: this.state.hints }),
-          _react2["default"].createElement(_componentsTimer2["default"], { now: Date.now(), timer: this.state.timer, onTimeup: this.handleTimeup }),
+          _react2["default"].createElement(_componentsTimer2["default"], {
+            gameState: this.state.gameState,
+            gameStates: this.state.gameStates,
+            now: Date.now(),
+            timer: this.state.timer,
+            onTimeup: this.handleTimeup
+          }),
           _react2["default"].createElement(_componentsBoardBoard2["default"], {
             num_of_rows: 3,
             num_of_cells: 3,
@@ -28521,7 +28530,8 @@ var TimerWaiting = (function (_React$Component2) {
   _createClass(TimerWaiting, [{
     key: "render",
     value: function render() {
-      return _react2["default"].createElement("div", { className: "timer_front" });
+      var width = this.props.gameState == this.props.gameStates.INIT ? 0 : 100;
+      return _react2["default"].createElement("div", { className: "timer_front", style: { width: "" + width + "%" } });
     }
   }]);
 
@@ -28542,10 +28552,13 @@ var Timer = (function (_React$Component3) {
     value: function render() {
       var now = this.props.now;
       var timer = this.props.timer;
-      var child = timer.isStopped(now) ? _react2["default"].createElement(TimerWaiting, null) : _react2["default"].createElement(TimerActive, {
+      console.log(this.props.gameState, this.props.gameStates.STARTED, this.props.gameState == this.props.gameStates.STARTED);
+      var child = this.props.gameState == this.props.gameStates.STARTED ? _react2["default"].createElement(TimerActive, {
         key: Math.random(),
         now: now, timer: timer,
-        onTimeup: this.props.onTimeup });
+        onTimeup: this.props.onTimeup }) : _react2["default"].createElement(TimerWaiting, {
+        gameState: this.props.gameState,
+        gameStates: this.props.gameStates });
 
       return _react2["default"].createElement(
         "div",
@@ -29668,9 +29681,11 @@ var Game = (function () {
     this._hintContainer = this._makeHintContainer();
     this._tileContainer = this._makeTileContainer();
 
-    var stateInit = new _modelsGameStatesInit2["default"](this);
-    var stateStarted = new _modelsGameStatesStarted2["default"](this);
-    var stateFinished = new _modelsGameStatesFinished2["default"](this);
+    this.states = {
+      INIT: new _modelsGameStatesInit2["default"](this),
+      STARTED: new _modelsGameStatesStarted2["default"](this),
+      FINISHED: new _modelsGameStatesFinished2["default"](this)
+    };
 
     var self = this;
 
@@ -29679,21 +29694,21 @@ var Game = (function () {
       events: [{ name: "start", from: "Init", to: "Started" }, { name: "timeup", from: "Started", to: "Finished" }, { name: "retry", from: "Finished", to: "Init" }],
       callbacks: {
         onInit: function onInit() {
-          return self._state = stateInit;
+          return self.state = self.states.INIT;
         },
         onStarted: function onStarted() {
           self.timer.start(Date.now());
-          self._state = stateStarted;
+          self.state = self.states.STARTED;
         },
         onFinished: function onFinished() {
-          return self._state = stateFinished;
+          return self.state = self.states.FINISHED;
         }
       }
     });
 
     this._fsm = fsm;
 
-    this._state = stateInit;
+    this.state = this.states.INIT;
   }
 
   _createClass(Game, [{
@@ -29733,7 +29748,7 @@ var Game = (function () {
   }, {
     key: "select",
     value: function select(cellId) {
-      return this._state.select(cellId);
+      return this.state.select(cellId);
     }
   }, {
     key: "hints",
@@ -29751,7 +29766,7 @@ var Game = (function () {
   }, {
     key: "appeals",
     value: function appeals() {
-      return this._state.appeals();
+      return this.state.appeals();
     }
   }]);
 
