@@ -29699,14 +29699,14 @@ var Game = (function () {
   _createClass(Game, [{
     key: "_makeHintContainer",
     value: function _makeHintContainer() {
-      return new _modelsHint2["default"](9, 4, [100], _modelsRand2["default"].randIterator);
+      return new _modelsHint2["default"](9, 4, [200], _modelsRand2["default"].randIterator);
     }
   }, {
     key: "_makeTileContainer",
     value: function _makeTileContainer() {
       return new _modelsTileContainer2["default"](9, [[new _modelsPool2["default"](_modelsColorMaster2["default"][0].map(function (color) {
         return new _modelsTile2["default"](color);
-      })), 100], [new _modelsPool2["default"]([].concat.apply([], _modelsColorMaster2["default"][1].map(function (color) {
+      })), 200], [new _modelsPool2["default"]([].concat.apply([], _modelsColorMaster2["default"][1].map(function (color) {
         return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(function (i) {
           return new _modelsTile2["default"](color, color, i);
         });
