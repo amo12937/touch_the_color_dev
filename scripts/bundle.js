@@ -28543,7 +28543,7 @@ var Timer = (function (_React$Component3) {
       var now = this.props.now;
       var timer = this.props.timer;
       var child = timer.isStopped(now) ? _react2["default"].createElement(TimerWaiting, null) : _react2["default"].createElement(TimerActive, {
-        key: timer.remain(now),
+        key: Math.random(),
         now: now, timer: timer,
         onTimeup: this.props.onTimeup });
 
