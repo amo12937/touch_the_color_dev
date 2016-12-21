@@ -29361,21 +29361,21 @@ var _modelsScoreValue = require("models/ScoreValue");
 var _modelsScoreValue2 = _interopRequireDefault(_modelsScoreValue);
 
 var scoreIcons = {
-  table: [[20, "♙"], // pawn
-  [100, "♘"], // knight
-  [500, "♗"], // bishop
-  [2500, "♖"], // rook
-  [12500, "♕"]],
+  table: [[200, "♙"], // pawn
+  [1000, "♘"], // knight
+  [5000, "♗"], // bishop
+  [25000, "♖"], // rook
+  [125000, "♕"]],
   // queen
   last: "♔" // king
 };
 
 var bestIcons = {
-  table: [[20, "♟"], // pawn
-  [100, "♞"], // knight
-  [500, "♝"], // bishop
-  [2500, "♜"], // rook
-  [12500, "♛"]],
+  table: [[200, "♟"], // pawn
+  [1000, "♞"], // knight
+  [5000, "♝"], // bishop
+  [25000, "♜"], // rook
+  [125000, "♛"]],
   // queen
   last: "♚" // king
 };
@@ -29721,7 +29721,7 @@ var Game = (function () {
   _createClass(Game, [{
     key: "_makeScoreTable",
     value: function _makeScoreTable() {
-      return [20];
+      return [1000];
     }
   }, {
     key: "_makeHintContainer",
@@ -29750,10 +29750,21 @@ var Game = (function () {
       this._fsm.timeup();
     }
   }, {
+    key: "_getScore",
+    value: function _getScore(now) {
+      if (this.timer.isStopped(now)) return 10;
+      var percent = this.timer.percent(now);
+      if (percent < 5) return 10;
+      if (percent < 25) return 5;
+      if (percent < 50) return 3;
+      return 1;
+    }
+  }, {
     key: "_update",
     value: function _update(cellId) {
-      this.timer.add(Date.now(), 1000);
-      this.score.count();
+      var now = Date.now();
+      this.score.count(this._getScore(now));
+      this.timer.add(now, 1000);
       if (this._scoreTable.length > 0 && this.score.current.value >= this._scoreTable[0]) {
         this._scoreTable.shift();
         this._tileContainer.updatePoolPointer();
