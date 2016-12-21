@@ -28552,7 +28552,6 @@ var Timer = (function (_React$Component3) {
     value: function render() {
       var now = this.props.now;
       var timer = this.props.timer;
-      console.log(this.props.gameState, this.props.gameStates.STARTED, this.props.gameState == this.props.gameStates.STARTED);
       var child = this.props.gameState == this.props.gameStates.STARTED ? _react2["default"].createElement(TimerActive, {
         key: Math.random(),
         now: now, timer: timer,
@@ -29224,15 +29223,14 @@ var _wu = require("wu");
 var _wu2 = _interopRequireDefault(_wu);
 
 var Hint = (function () {
-  function Hint(total, hintSize, resetRule, randIterator) {
-    if (resetRule === undefined) resetRule = [];
-
+  function Hint(tileSize, hintSize, randIterator) {
     _classCallCheck(this, Hint);
 
     var hints = Array.from(_wu2["default"].count().take(hintSize));
-    var pool = Array.from(_wu2["default"].count(hintSize).take(total - hintSize));
-    var resetter = Array.from(_wu2["default"].count().take(total - hintSize));
-    var rs = randIterator(pool.length);
+    var poolSize = tileSize - hintSize;
+    var pool = Array.from(_wu2["default"].count(hintSize).take(poolSize));
+    var resetter = Array.from(_wu2["default"].count().take(poolSize));
+    var rs = randIterator(poolSize);
 
     var getNext = function getNext(r) {
       var x = hints.shift();
@@ -29244,13 +29242,13 @@ var Hint = (function () {
     rs.take(hintSize).forEach(getNext);
 
     this.hints = hints;
-    this.update = _wu2["default"].chain((0, _wu2["default"])(resetRule).map(function (m) {
-      return m - total;
-    }).filter(function (m) {
-      return m >= 0;
-    }).map(function (m) {
-      return [rs.take(m), resetter, rs.take(hintSize)];
-    }).flatten(), rs).map(getNext).next;
+    this.cleanup = function () {
+      rs = _wu2["default"].chain(resetter, rs);
+    };
+
+    this.update = function () {
+      getNext(rs.next().value);
+    };
   }
 
   _createClass(Hint, [{
@@ -29283,22 +29281,31 @@ var _modelsRand = require("models/Rand");
 
 var _modelsRand2 = _interopRequireDefault(_modelsRand);
 
+var PoolItem = function PoolItem(item, backToPool) {
+  _classCallCheck(this, PoolItem);
+
+  this.item = item;
+  this.backToPool = backToPool(this);
+};
+
 var Pool = (function () {
-  function Pool(objs) {
+  function Pool(items) {
     _classCallCheck(this, Pool);
 
-    this._objs = objs;
+    var self = this;
+    this._poolItems = items.map(function (item) {
+      return new PoolItem(item, function (poolItem) {
+        return function () {
+          return self._poolItems.push(poolItem);
+        };
+      });
+    });
   }
 
   _createClass(Pool, [{
     key: "borrow",
     value: function borrow() {
-      return this._objs.splice(_modelsRand2["default"].randInt(this._objs.length), 1)[0];
-    }
-  }, {
-    key: "returnObject",
-    value: function returnObject(obj) {
-      this._objs.push(obj);
+      return this._poolItems.splice(_modelsRand2["default"].randInt(this._poolItems.length), 1)[0];
     }
   }]);
 
@@ -29481,8 +29488,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; })();
-
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -29494,31 +29499,34 @@ var _wu = require("wu");
 var _wu2 = _interopRequireDefault(_wu);
 
 var TileContainer = (function () {
-  function TileContainer(size, items) {
+  function TileContainer(size, poolList) {
     _classCallCheck(this, TileContainer);
 
     this._size = size;
-
-    var _wu$map$flatten$tee = (0, _wu2["default"])(items).map(function (_ref) {
-      var _ref2 = _slicedToArray(_ref, 2);
-
-      var pool = _ref2[0];
-      var n = _ref2[1];
-      return n >= 0 ? _wu2["default"].repeat(pool).take(n) : _wu2["default"].repeat(pool);
-    }).flatten().tee();
-
-    var _wu$map$flatten$tee2 = _slicedToArray(_wu$map$flatten$tee, 2);
-
-    var borrowFrom = _wu$map$flatten$tee2[0];
-    var returnTo = _wu$map$flatten$tee2[1];
-
-    this._tiles = Array.from(borrowFrom.take(size).map(function (b) {
-      return b.borrow();
+    this._cp = 0; // currentPool
+    this._poolList = poolList;
+    var pool = this._currentPool();
+    this._tiles = Array.from(_wu2["default"].repeat(0).take(size).map(function () {
+      return pool.borrow();
     }));
-    this._plans = _wu2["default"].zip(borrowFrom, returnTo);
   }
 
   _createClass(TileContainer, [{
+    key: "updatePoolPointer",
+    value: function updatePoolPointer() {
+      this._cp = Math.min(this._cp + 1, this._poolList.length - 1);
+    }
+  }, {
+    key: "resetPoolPointer",
+    value: function resetPoolPointer() {
+      this._cp = 0;
+    }
+  }, {
+    key: "_currentPool",
+    value: function _currentPool() {
+      return this._poolList[this._cp];
+    }
+  }, {
     key: "trySelect",
     value: function trySelect(i) {
       return 0 <= i && i < this._size;
@@ -29527,21 +29535,17 @@ var TileContainer = (function () {
     key: "select",
     value: function select(i) {
       if (!this.trySelect(i)) return false;
-
-      var _plans$next$value = _slicedToArray(this._plans.next().value, 2);
-
-      var borrowFrom = _plans$next$value[0];
-      var returnTo = _plans$next$value[1];
-
-      var next = borrowFrom.borrow();
-      returnTo.returnObject(this._tiles[i]);
-      this._tiles[i] = next;
+      var oldItem = this._tiles[i];
+      this._tiles[i] = this._currentPool().borrow();
+      oldItem.backToPool();
       return true;
     }
   }, {
     key: "tiles",
     value: function tiles() {
-      return this._tiles;
+      return this._tiles.map(function (tile) {
+        return tile.item;
+      });
     }
   }]);
 
@@ -29677,7 +29681,10 @@ var Game = (function () {
     _classCallCheck(this, Game);
 
     this.timer = new _modelsTimer2["default"](5000);
+
     this.score = new _modelsScore2["default"](0);
+
+    this._scoreTable = this._makeScoreTable();
     this._hintContainer = this._makeHintContainer();
     this._tileContainer = this._makeTileContainer();
 
@@ -29712,20 +29719,25 @@ var Game = (function () {
   }
 
   _createClass(Game, [{
+    key: "_makeScoreTable",
+    value: function _makeScoreTable() {
+      return [20];
+    }
+  }, {
     key: "_makeHintContainer",
     value: function _makeHintContainer() {
-      return new _modelsHint2["default"](9, 4, [200], _modelsRand2["default"].randIterator);
+      return new _modelsHint2["default"](9, 4, _modelsRand2["default"].randIterator);
     }
   }, {
     key: "_makeTileContainer",
     value: function _makeTileContainer() {
-      return new _modelsTileContainer2["default"](9, [[new _modelsPool2["default"](_modelsColorMaster2["default"][0].map(function (color) {
+      return new _modelsTileContainer2["default"](9, [new _modelsPool2["default"](_modelsColorMaster2["default"][0].map(function (color) {
         return new _modelsTile2["default"](color);
-      })), 200], [new _modelsPool2["default"]([].concat.apply([], _modelsColorMaster2["default"][1].map(function (color) {
+      })), new _modelsPool2["default"]([].concat.apply([], _modelsColorMaster2["default"][1].map(function (color) {
         return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(function (i) {
           return new _modelsTile2["default"](color, color, i);
         });
-      }))), -1]]);
+      })))]);
     }
   }, {
     key: "retry",
@@ -29742,6 +29754,11 @@ var Game = (function () {
     value: function _update(cellId) {
       this.timer.add(Date.now(), 1000);
       this.score.count();
+      if (this._scoreTable.length > 0 && this.score.current.value >= this._scoreTable[0]) {
+        this._scoreTable.shift();
+        this._tileContainer.updatePoolPointer();
+        this._hintContainer.cleanup();
+      }
       this._tileContainer.select(cellId);
       this._hintContainer.update();
     }
