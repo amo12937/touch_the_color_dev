@@ -29538,6 +29538,10 @@ var _modelsScoreScore = require("models/score/Score");
 
 var _modelsScoreScore2 = _interopRequireDefault(_modelsScoreScore);
 
+var _modelsScoreScoreTable = require("models/score/ScoreTable");
+
+var _modelsScoreScoreTable2 = _interopRequireDefault(_modelsScoreScoreTable);
+
 var _modelsHint = require("models/Hint");
 
 var _modelsHint2 = _interopRequireDefault(_modelsHint);
@@ -29553,6 +29557,10 @@ var _modelsTile2 = _interopRequireDefault(_modelsTile);
 var _modelsTimer = require("models/Timer");
 
 var _modelsTimer2 = _interopRequireDefault(_modelsTimer);
+
+var _modelsColor = require("models/Color");
+
+var _modelsColor2 = _interopRequireDefault(_modelsColor);
 
 var _modelsColorMaster = require("models/ColorMaster");
 
@@ -29590,7 +29598,8 @@ var Game = (function () {
 
     this.score = new _modelsScoreScore2["default"](0);
 
-    this._scoreTable = this._makeScoreTable();
+    this.scoreTable = this._makeScoreTable();
+    this._tileUpdationRule = this._makeTileUpdationRule();
     this._hintContainer = this._makeHintContainer();
     this._tileContainer = this._makeTileContainer();
 
@@ -29627,6 +29636,11 @@ var Game = (function () {
   _createClass(Game, [{
     key: "_makeScoreTable",
     value: function _makeScoreTable() {
+      return new _modelsScoreScoreTable2["default"]([{ percent: 10, score: 10, color: new _modelsColor2["default"](0x3B, 0xF4, 0x2E) }, { percent: 25, score: 5, color: new _modelsColor2["default"](0xFD, 0xE8, 0x4C) }, { percent: 50, score: 3, color: new _modelsColor2["default"](0xFE, 0xA3, 0x42) }], { score: 1, color: new _modelsColor2["default"](0xFF, 0x5F, 0x38) });
+    }
+  }, {
+    key: "_makeTileUpdationRule",
+    value: function _makeTileUpdationRule() {
       return [1000];
     }
   }, {
@@ -29656,21 +29670,13 @@ var Game = (function () {
       this._fsm.timeup();
     }
   }, {
-    key: "_getScore",
-    value: function _getScore(percent) {
-      if (percent < 5) return 10;
-      if (percent < 25) return 5;
-      if (percent < 50) return 3;
-      return 1;
-    }
-  }, {
     key: "_update",
     value: function _update(cellId) {
       var now = Date.now();
-      this.score.count(this._getScore(this.timer.percent(now)));
+      this.score.count(this.scoreTable.getScore(this.timer.percent(now)));
       this.timer.add(now, 1000);
-      if (this._scoreTable.length > 0 && this.score.current.value >= this._scoreTable[0]) {
-        this._scoreTable.shift();
+      if (this._tileUpdationRule.length > 0 && this.score.current.value >= this._tileUpdationRule[0]) {
+        this._tileUpdationRule.shift();
         this._tileContainer.updatePoolPointer();
         this._hintContainer.cleanup();
       }
@@ -29708,7 +29714,7 @@ var Game = (function () {
 exports["default"] = Game;
 module.exports = exports["default"];
 
-},{"javascript-state-machine":25,"models/ColorMaster":207,"models/Hint":208,"models/Pool":209,"models/Rand":210,"models/Tile":211,"models/TileContainer":212,"models/Timer":213,"models/game/states/Finished":215,"models/game/states/Init":216,"models/game/states/Started":217,"models/score/Score":218,"wu":193}],215:[function(require,module,exports){
+},{"javascript-state-machine":25,"models/Color":206,"models/ColorMaster":207,"models/Hint":208,"models/Pool":209,"models/Rand":210,"models/Tile":211,"models/TileContainer":212,"models/Timer":213,"models/game/states/Finished":215,"models/game/states/Init":216,"models/game/states/Started":217,"models/score/Score":218,"models/score/ScoreTable":219,"wu":193}],215:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29936,7 +29942,41 @@ var Score = (function () {
 exports["default"] = Score;
 module.exports = exports["default"];
 
-},{"models/score/ScoreValue":219}],219:[function(require,module,exports){
+},{"models/score/ScoreValue":220}],219:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ScoreTable = (function () {
+  function ScoreTable(table, defaultScore) {
+    _classCallCheck(this, ScoreTable);
+
+    this.table = table;
+    this.defaultScore = defaultScore;
+  }
+
+  _createClass(ScoreTable, [{
+    key: "getScore",
+    value: function getScore(percent) {
+      return (this.table.find(function (item) {
+        return percent < item.percent;
+      }) || this.defaultScore).score;
+    }
+  }]);
+
+  return ScoreTable;
+})();
+
+exports["default"] = ScoreTable;
+module.exports = exports["default"];
+
+},{}],220:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
