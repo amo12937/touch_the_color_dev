@@ -28344,7 +28344,7 @@ var App = (function (_React$Component) {
 exports["default"] = App;
 module.exports = exports["default"];
 
-},{"components/ScoreHintContainer":195,"components/Timer":197,"components/board/Board":198,"models/game/Game":216,"react":192}],195:[function(require,module,exports){
+},{"components/ScoreHintContainer":195,"components/Timer":197,"components/board/Board":198,"models/game/Game":214,"react":192}],195:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29350,117 +29350,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var _modelsScoreValue = require("models/ScoreValue");
-
-var _modelsScoreValue2 = _interopRequireDefault(_modelsScoreValue);
-
-var scoreIcons = {
-  table: [[200, "♙"], // pawn
-  [1000, "♘"], // knight
-  [5000, "♗"], // bishop
-  [25000, "♖"], // rook
-  [125000, "♕"]],
-  // queen
-  last: "♔" // king
-};
-
-var bestIcons = {
-  table: [[200, "♟"], // pawn
-  [1000, "♞"], // knight
-  [5000, "♝"], // bishop
-  [25000, "♜"], // rook
-  [125000, "♛"]],
-  // queen
-  last: "♚" // king
-};
-
-var Score = (function () {
-  function Score(best) {
-    _classCallCheck(this, Score);
-
-    this.current = new _modelsScoreValue2["default"](0, scoreIcons.table, scoreIcons.last);
-    this.best = new _modelsScoreValue2["default"](best, bestIcons.table, bestIcons.last);
-  }
-
-  _createClass(Score, [{
-    key: "reset",
-    value: function reset() {
-      this.current.update(0);
-    }
-  }, {
-    key: "count",
-    value: function count() {
-      var n = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-
-      this.current.update(this.current.value + n);
-      if (this.best.value < this.current.value) this.best.update(this.current.value);
-    }
-  }]);
-
-  return Score;
-})();
-
-exports["default"] = Score;
-module.exports = exports["default"];
-
-},{"models/ScoreValue":212}],212:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; })();
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var ScoreValue = (function () {
-  function ScoreValue(value, iconTable, lastIcon) {
-    _classCallCheck(this, ScoreValue);
-
-    this.value = value;
-    this.findIcon = function (v) {
-      var res = iconTable.find(function (_ref) {
-        var _ref2 = _slicedToArray(_ref, 2);
-
-        var score = _ref2[0];
-        var icon = _ref2[1];
-        return v < score;
-      });
-      return res == null ? lastIcon : res[1];
-    };
-    this.icon = this.findIcon(value);
-  }
-
-  _createClass(ScoreValue, [{
-    key: "update",
-    value: function update(value) {
-      this.value = value;
-      this.icon = this.findIcon(value);
-    }
-  }]);
-
-  return ScoreValue;
-})();
-
-exports["default"] = ScoreValue;
-module.exports = exports["default"];
-
-},{}],213:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Tile = function Tile(bgColor) {
@@ -29481,7 +29370,7 @@ var Tile = function Tile(bgColor) {
 exports["default"] = Tile;
 module.exports = exports["default"];
 
-},{}],214:[function(require,module,exports){
+},{}],212:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29555,7 +29444,7 @@ var TileContainer = (function () {
 exports["default"] = TileContainer;
 module.exports = exports["default"];
 
-},{"wu":193}],215:[function(require,module,exports){
+},{"wu":193}],213:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29611,7 +29500,7 @@ var Timer = (function () {
 exports["default"] = Timer;
 module.exports = exports["default"];
 
-},{}],216:[function(require,module,exports){
+},{}],214:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29628,9 +29517,9 @@ var _modelsRand = require("models/Rand");
 
 var _modelsRand2 = _interopRequireDefault(_modelsRand);
 
-var _modelsScore = require("models/Score");
+var _modelsScoreScore = require("models/score/Score");
 
-var _modelsScore2 = _interopRequireDefault(_modelsScore);
+var _modelsScoreScore2 = _interopRequireDefault(_modelsScoreScore);
 
 var _modelsHint = require("models/Hint");
 
@@ -29682,7 +29571,7 @@ var Game = (function () {
 
     this.timer = new _modelsTimer2["default"](5000);
 
-    this.score = new _modelsScore2["default"](0);
+    this.score = new _modelsScoreScore2["default"](0);
 
     this._scoreTable = this._makeScoreTable();
     this._hintContainer = this._makeHintContainer();
@@ -29804,7 +29693,7 @@ var Game = (function () {
 exports["default"] = Game;
 module.exports = exports["default"];
 
-},{"javascript-state-machine":25,"models/ColorMaster":207,"models/Hint":208,"models/Pool":209,"models/Rand":210,"models/Score":211,"models/Tile":213,"models/TileContainer":214,"models/Timer":215,"models/game/states/Finished":217,"models/game/states/Init":218,"models/game/states/Started":219,"wu":193}],217:[function(require,module,exports){
+},{"javascript-state-machine":25,"models/ColorMaster":207,"models/Hint":208,"models/Pool":209,"models/Rand":210,"models/Tile":211,"models/TileContainer":212,"models/Timer":213,"models/game/states/Finished":215,"models/game/states/Init":216,"models/game/states/Started":217,"models/score/Score":218,"wu":193}],215:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29840,7 +29729,7 @@ var Finished = (function () {
 exports["default"] = Finished;
 module.exports = exports["default"];
 
-},{}],218:[function(require,module,exports){
+},{}],216:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29892,7 +29781,7 @@ var Init = (function () {
 exports["default"] = Init;
 module.exports = exports["default"];
 
-},{"models/Color":206,"models/Tile":213}],219:[function(require,module,exports){
+},{"models/Color":206,"models/Tile":211}],217:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29966,4 +29855,115 @@ var Started = (function () {
 exports["default"] = Started;
 module.exports = exports["default"];
 
-},{"models/ColorMaster":207,"models/Hint":208,"models/Pool":209,"models/Rand":210,"models/Tile":213,"models/TileContainer":214,"wu":193}]},{},[205]);
+},{"models/ColorMaster":207,"models/Hint":208,"models/Pool":209,"models/Rand":210,"models/Tile":211,"models/TileContainer":212,"wu":193}],218:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _modelsScoreScoreValue = require("models/score/ScoreValue");
+
+var _modelsScoreScoreValue2 = _interopRequireDefault(_modelsScoreScoreValue);
+
+var scoreIcons = {
+  table: [[200, "♙"], // pawn
+  [1000, "♘"], // knight
+  [5000, "♗"], // bishop
+  [25000, "♖"], // rook
+  [125000, "♕"]],
+  // queen
+  last: "♔" // king
+};
+
+var bestIcons = {
+  table: [[200, "♟"], // pawn
+  [1000, "♞"], // knight
+  [5000, "♝"], // bishop
+  [25000, "♜"], // rook
+  [125000, "♛"]],
+  // queen
+  last: "♚" // king
+};
+
+var Score = (function () {
+  function Score(best) {
+    _classCallCheck(this, Score);
+
+    this.current = new _modelsScoreScoreValue2["default"](0, scoreIcons.table, scoreIcons.last);
+    this.best = new _modelsScoreScoreValue2["default"](best, bestIcons.table, bestIcons.last);
+  }
+
+  _createClass(Score, [{
+    key: "reset",
+    value: function reset() {
+      this.current.update(0);
+    }
+  }, {
+    key: "count",
+    value: function count() {
+      var n = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+
+      this.current.update(this.current.value + n);
+      if (this.best.value < this.current.value) this.best.update(this.current.value);
+    }
+  }]);
+
+  return Score;
+})();
+
+exports["default"] = Score;
+module.exports = exports["default"];
+
+},{"models/score/ScoreValue":219}],219:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; })();
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ScoreValue = (function () {
+  function ScoreValue(value, iconTable, lastIcon) {
+    _classCallCheck(this, ScoreValue);
+
+    this.value = value;
+    this.findIcon = function (v) {
+      var res = iconTable.find(function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 2);
+
+        var score = _ref2[0];
+        var icon = _ref2[1];
+        return v < score;
+      });
+      return res == null ? lastIcon : res[1];
+    };
+    this.icon = this.findIcon(value);
+  }
+
+  _createClass(ScoreValue, [{
+    key: "update",
+    value: function update(value) {
+      this.value = value;
+      this.icon = this.findIcon(value);
+    }
+  }]);
+
+  return ScoreValue;
+})();
+
+exports["default"] = ScoreValue;
+module.exports = exports["default"];
+
+},{}]},{},[205]);
