@@ -29447,6 +29447,12 @@ module.exports = exports["default"];
 },{"wu":193}],213:[function(require,module,exports){
 "use strict";
 
+/*
+ *  waiting    | running                      | finished
+ * ------------|------------*-----------------|------------
+ *             `startTime   `currentTime      `endTime
+ */
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -29460,32 +29466,43 @@ var Timer = (function () {
     _classCallCheck(this, Timer);
 
     this.max = max;
-    this.stoppedTime = 0;
+    this.reset();
   }
 
   _createClass(Timer, [{
     key: "start",
-    value: function start(currentTime) {
-      if (!this.isStopped(currentTime)) return;
-      this.stoppedTime = currentTime + this.max;
+    value: function start(startTime) {
+      if (this.isRunning(startTime)) return;
+      this.restart(startTime);
+    }
+  }, {
+    key: "restart",
+    value: function restart(startTime) {
+      this.startTime = startTime;
+      this.endTime = startTime + this.max;
+    }
+  }, {
+    key: "reset",
+    value: function reset() {
+      this.restart(Infinity);
     }
   }, {
     key: "add",
     value: function add(currentTime, msec) {
-      if (this.isStopped(currentTime)) return false;
-      this.stoppedTime = Math.min(this.stoppedTime + msec, currentTime + this.max);
+      if (!this.isRunning(currentTime)) return false;
+      this.restart(Math.min(this.startTime + msec, currentTime));
 
-      return !this.isStopped(currentTime);
+      return this.isRunning(currentTime);
     }
   }, {
-    key: "isStopped",
-    value: function isStopped(currentTime) {
-      return this.stoppedTime < currentTime;
+    key: "isRunning",
+    value: function isRunning(currentTime) {
+      return this.startTime <= currentTime && currentTime < this.endTime;
     }
   }, {
     key: "remain",
     value: function remain(currentTime) {
-      return Math.max(0, this.stoppedTime - currentTime);
+      return Math.min(this.max, Math.max(0, this.endTime - currentTime));
     }
   }, {
     key: "percent",
@@ -29640,9 +29657,7 @@ var Game = (function () {
     }
   }, {
     key: "_getScore",
-    value: function _getScore(now) {
-      if (this.timer.isStopped(now)) return 10;
-      var percent = this.timer.percent(now);
+    value: function _getScore(percent) {
       if (percent < 5) return 10;
       if (percent < 25) return 5;
       if (percent < 50) return 3;
@@ -29652,7 +29667,7 @@ var Game = (function () {
     key: "_update",
     value: function _update(cellId) {
       var now = Date.now();
-      this.score.count(this._getScore(now));
+      this.score.count(this._getScore(this.timer.percent(now)));
       this.timer.add(now, 1000);
       if (this._scoreTable.length > 0 && this.score.current.value >= this._scoreTable[0]) {
         this._scoreTable.shift();
