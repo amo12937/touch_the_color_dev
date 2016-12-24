@@ -28344,7 +28344,7 @@ var App = (function (_React$Component) {
 exports["default"] = App;
 module.exports = exports["default"];
 
-},{"components/ScoreHintContainer":195,"components/Timer":197,"components/board/Board":198,"models/game/Game":214,"react":192}],195:[function(require,module,exports){
+},{"components/ScoreHintContainer":195,"components/Timer":197,"components/board/Board":198,"models/game/Game":215,"react":192}],195:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29315,7 +29315,44 @@ var Pool = (function () {
 exports["default"] = Pool;
 module.exports = exports["default"];
 
-},{"models/Rand":210}],210:[function(require,module,exports){
+},{"models/Rand":211}],210:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var PrefixStorage = (function () {
+  function PrefixStorage(base, prefix) {
+    _classCallCheck(this, PrefixStorage);
+
+    this._base = base;
+    this._prefix = prefix;
+  }
+
+  _createClass(PrefixStorage, [{
+    key: "setItem",
+    value: function setItem(key, value) {
+      return this._base.setItem(this._prefix + key, value);
+    }
+  }, {
+    key: "getItem",
+    value: function getItem(key) {
+      return this._base.getItem(this._prefix + key);
+    }
+  }]);
+
+  return PrefixStorage;
+})();
+
+exports["default"] = PrefixStorage;
+module.exports = exports["default"];
+
+},{}],211:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29343,7 +29380,7 @@ exports["default"] = (function () {
 
 module.exports = exports["default"];
 
-},{"wu":193}],211:[function(require,module,exports){
+},{"wu":193}],212:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29370,7 +29407,7 @@ var Tile = function Tile(bgColor) {
 exports["default"] = Tile;
 module.exports = exports["default"];
 
-},{}],212:[function(require,module,exports){
+},{}],213:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29444,7 +29481,7 @@ var TileContainer = (function () {
 exports["default"] = TileContainer;
 module.exports = exports["default"];
 
-},{"wu":193}],213:[function(require,module,exports){
+},{"wu":193}],214:[function(require,module,exports){
 "use strict";
 
 /*
@@ -29517,7 +29554,7 @@ var Timer = (function () {
 exports["default"] = Timer;
 module.exports = exports["default"];
 
-},{}],214:[function(require,module,exports){
+},{}],215:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29570,6 +29607,10 @@ var _modelsPool = require("models/Pool");
 
 var _modelsPool2 = _interopRequireDefault(_modelsPool);
 
+var _modelsPrefixStorage = require("models/PrefixStorage");
+
+var _modelsPrefixStorage2 = _interopRequireDefault(_modelsPrefixStorage);
+
 var _wu = require("wu");
 
 var _wu2 = _interopRequireDefault(_wu);
@@ -29596,7 +29637,8 @@ var Game = (function () {
 
     this.timer = new _modelsTimer2["default"](5000);
 
-    this.score = new _modelsScoreScore2["default"](0);
+    var storage = new _modelsPrefixStorage2["default"](localStorage, "touch_the_color/");
+    this.score = new _modelsScoreScore2["default"](storage);
 
     this.scoreTable = this._makeScoreTable();
     this._tileUpdationRule = this._makeTileUpdationRule();
@@ -29714,7 +29756,7 @@ var Game = (function () {
 exports["default"] = Game;
 module.exports = exports["default"];
 
-},{"javascript-state-machine":25,"models/Color":206,"models/ColorMaster":207,"models/Hint":208,"models/Pool":209,"models/Rand":210,"models/Tile":211,"models/TileContainer":212,"models/Timer":213,"models/game/states/Finished":215,"models/game/states/Init":216,"models/game/states/Started":217,"models/score/Score":218,"models/score/ScoreTable":219,"wu":193}],215:[function(require,module,exports){
+},{"javascript-state-machine":25,"models/Color":206,"models/ColorMaster":207,"models/Hint":208,"models/Pool":209,"models/PrefixStorage":210,"models/Rand":211,"models/Tile":212,"models/TileContainer":213,"models/Timer":214,"models/game/states/Finished":216,"models/game/states/Init":217,"models/game/states/Started":218,"models/score/Score":219,"models/score/ScoreTable":220,"wu":193}],216:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29750,7 +29792,7 @@ var Finished = (function () {
 exports["default"] = Finished;
 module.exports = exports["default"];
 
-},{}],216:[function(require,module,exports){
+},{}],217:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29802,7 +29844,7 @@ var Init = (function () {
 exports["default"] = Init;
 module.exports = exports["default"];
 
-},{"models/Color":206,"models/Tile":211}],217:[function(require,module,exports){
+},{"models/Color":206,"models/Tile":212}],218:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29876,7 +29918,7 @@ var Started = (function () {
 exports["default"] = Started;
 module.exports = exports["default"];
 
-},{"models/ColorMaster":207,"models/Hint":208,"models/Pool":209,"models/Rand":210,"models/Tile":211,"models/TileContainer":212,"wu":193}],218:[function(require,module,exports){
+},{"models/ColorMaster":207,"models/Hint":208,"models/Pool":209,"models/Rand":211,"models/Tile":212,"models/TileContainer":213,"wu":193}],219:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29914,9 +29956,11 @@ var bestIcons = {
 };
 
 var Score = (function () {
-  function Score(best) {
+  function Score(storage) {
     _classCallCheck(this, Score);
 
+    var best = 1 * storage.getItem("best");
+    this._storage = storage;
     this.current = new _modelsScoreScoreValue2["default"](0, scoreIcons.table, scoreIcons.last);
     this.best = new _modelsScoreScoreValue2["default"](best, bestIcons.table, bestIcons.last);
   }
@@ -29932,7 +29976,10 @@ var Score = (function () {
       var n = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
 
       this.current.update(this.current.value + n);
-      if (this.best.value < this.current.value) this.best.update(this.current.value);
+      if (this.best.value < this.current.value) {
+        this.best.update(this.current.value);
+        this._storage.setItem("best", this.current.value);
+      }
     }
   }]);
 
@@ -29942,7 +29989,7 @@ var Score = (function () {
 exports["default"] = Score;
 module.exports = exports["default"];
 
-},{"models/score/ScoreValue":220}],219:[function(require,module,exports){
+},{"models/score/ScoreValue":221}],220:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29976,7 +30023,7 @@ var ScoreTable = (function () {
 exports["default"] = ScoreTable;
 module.exports = exports["default"];
 
-},{}],220:[function(require,module,exports){
+},{}],221:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
