@@ -369,10 +369,10 @@ html, body {
   .tile .tile_content {
     /* to expand div*/
     position: absolute;
-    top: 10%;
-    right: 10%;
-    bottom: 10%;
-    left: 10%;
+    top: 1vmin;
+    right: 1vmin;
+    bottom: 1vmin;
+    left: 1vmin;
     /* to centerize text */
     display: -webkit-box;
     display: -ms-flexbox;
@@ -389,7 +389,7 @@ html, body {
         -ms-user-select: none;
             user-select: none;
     font-size: xx-large;
-    border-radius: 16%; }
+    border-radius: calc(20% - 0.5vmin); }
 
 .score_hint_container {
   width: 76vmin;
