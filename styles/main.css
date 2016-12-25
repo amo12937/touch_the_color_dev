@@ -369,10 +369,10 @@ html, body {
   .tile .tile_content {
     /* to expand div*/
     position: absolute;
-    top: 10%;
-    right: 10%;
-    bottom: 10%;
-    left: 10%;
+    top: 1vmin;
+    right: 1vmin;
+    bottom: 1vmin;
+    left: 1vmin;
     /* to centerize text */
     display: -webkit-box;
     display: -ms-flexbox;
@@ -389,7 +389,7 @@ html, body {
         -ms-user-select: none;
             user-select: none;
     font-size: xx-large;
-    border-radius: 16%; }
+    border-radius: calc(20% - 0.5vmin); }
 
 .score_hint_container {
   width: 76vmin;
@@ -480,3 +480,66 @@ html, body {
   100% {
     -webkit-transform: scale(1);
             transform: scale(1); } }
+
+.game-over {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: relative; }
+
+.game-over-enter {
+  -webkit-transition: opacity 2s;
+  transition: opacity 2s;
+  opacity: 0; }
+
+.game-over-enter-active {
+  opacity: 1; }
+
+.game-over-leave {
+  -webkit-transition: all 400ms;
+  transition: all 400ms; }
+
+.game-over-leave-active {
+  opacity: 0;
+  -webkit-transform: scale(2);
+          transform: scale(2); }
+
+.game-over-outer {
+  position: absolute;
+  width: 100vmin;
+  height: 100vmin;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto; }
+
+.game-over-inner {
+  width: 81vmin;
+  height: 81vmin;
+  margin: 19vmin auto auto;
+  position: relative; }
+
+.game-over-retry {
+  width: 30vmin;
+  height: 12vmin;
+  background-color: #f8f8f8;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  text-align: center;
+  border: 1vmin solid #333333;
+  border-radius: 3vmin;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  font-size: x-large; }
