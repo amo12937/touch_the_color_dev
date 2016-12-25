@@ -29670,7 +29670,7 @@ var Game = (function () {
   _createClass(Game, [{
     key: "_makeScoreTable",
     value: function _makeScoreTable() {
-      return new _modelsScoreScoreTable2["default"]([{ percent: 10, score: 10, color: new _modelsColor2["default"](0x3B, 0xF4, 0x2E) }, { percent: 25, score: 5, color: new _modelsColor2["default"](0xFD, 0xE8, 0x4C) }, { percent: 50, score: 3, color: new _modelsColor2["default"](0xFE, 0xA3, 0x42) }], { score: 1, color: new _modelsColor2["default"](0xFF, 0x5F, 0x38) });
+      return new _modelsScoreScoreTable2["default"]([{ percent: 10, score: 10 }, { percent: 25, score: 5 }, { percent: 50, score: 3 }], { score: 1 });
     }
   }, {
     key: "_makeTileUpdationRule",
