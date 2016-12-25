@@ -28270,6 +28270,7 @@ var App = (function (_React$Component) {
 
     this.handleClick = this.handleClick.bind(this);
     this.handleTimeup = this.handleTimeup.bind(this);
+    this.handleRetry = this.handleRetry.bind(this);
   }
 
   _createClass(App, [{
@@ -28292,6 +28293,12 @@ var App = (function (_React$Component) {
     key: "handleTimeup",
     value: function handleTimeup() {
       this.game.timeup();
+      this.setState(this.getState());
+    }
+  }, {
+    key: "handleRetry",
+    value: function handleRetry() {
+      this.game.retry();
       this.setState(this.getState());
     }
   }, {
@@ -28333,6 +28340,11 @@ var App = (function (_React$Component) {
             failed: this.state.failed,
             onClick: this.handleClick
           })
+        ),
+        _react2["default"].createElement(
+          "div",
+          { onClick: this.handleRetry },
+          "retry"
         )
       );
     }
@@ -29631,11 +29643,6 @@ var Game = (function () {
     var storage = new _modelsPrefixStorage2["default"](localStorage, "touch_the_color/");
     this.score = new _modelsScoreScore2["default"](storage);
 
-    this.scoreTable = this._makeScoreTable();
-    this._tileUpdationRule = this._makeTileUpdationRule();
-    this._hintContainer = this._makeHintContainer();
-    this._tileContainer = this._makeTileContainer();
-
     this.states = {
       INIT: new _modelsGameStatesInit2["default"](this),
       STARTED: new _modelsGameStatesStarted2["default"](this),
@@ -29649,7 +29656,12 @@ var Game = (function () {
       events: [{ name: "start", from: "Init", to: "Started" }, { name: "timeup", from: "Started", to: "Finished" }, { name: "retry", from: "Finished", to: "Init" }],
       callbacks: {
         onInit: function onInit() {
-          return self.state = self.states.INIT;
+          self.score.reset();
+          self.scoreTable = self._makeScoreTable();
+          self._tileUpdationRule = self._makeTileUpdationRule();
+          self._hintContainer = self._makeHintContainer();
+          self._tileContainer = self._makeTileContainer();
+          self.state = self.states.INIT;
         },
         onStarted: function onStarted() {
           self.timer.start(Date.now());
@@ -29662,8 +29674,6 @@ var Game = (function () {
     });
 
     this._fsm = fsm;
-
-    this.state = this.states.INIT;
   }
 
   _createClass(Game, [{
@@ -29695,7 +29705,7 @@ var Game = (function () {
   }, {
     key: "retry",
     value: function retry() {
-      this._fsm.retly();
+      this._fsm.retry();
     }
   }, {
     key: "timeup",
@@ -29799,15 +29809,13 @@ var Init = (function () {
     _classCallCheck(this, Init);
 
     this._game = game;
-    this._firstCellId = game._hintContainer.hints[0];
-    this._appeals = {};
-    this._appeals[this._firstCellId] = true;
   }
 
   _createClass(Init, [{
     key: "select",
     value: function select(cellId) {
-      if (cellId != this._firstCellId) return false;
+      var firstCellId = this._game._hintContainer.hints[0];
+      if (cellId != firstCellId) return false;
       this._game._update(cellId);
       this._game._fsm.start();
       return true;
@@ -29815,7 +29823,11 @@ var Init = (function () {
   }, {
     key: "appeals",
     value: function appeals() {
-      return this._appeals;
+      var appeals = {};
+      var firstCellId = this._game._hintContainer.hints[0];
+      appeals[firstCellId] = true;
+
+      return appeals;
     }
   }]);
 
