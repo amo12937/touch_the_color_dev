@@ -29787,17 +29787,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var _modelsTile = require("models/Tile");
-
-var _modelsTile2 = _interopRequireDefault(_modelsTile);
-
-var _modelsColor = require("models/Color");
-
-var _modelsColor2 = _interopRequireDefault(_modelsColor);
 
 var Init = (function () {
   function Init(game) {
@@ -29830,7 +29820,7 @@ var Init = (function () {
 exports["default"] = Init;
 module.exports = exports["default"];
 
-},{"models/Color":206,"models/Tile":212}],218:[function(require,module,exports){
+},{}],218:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29839,37 +29829,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var _modelsRand = require("models/Rand");
-
-var _modelsRand2 = _interopRequireDefault(_modelsRand);
-
-var _modelsHint = require("models/Hint");
-
-var _modelsHint2 = _interopRequireDefault(_modelsHint);
-
-var _modelsTileContainer = require("models/TileContainer");
-
-var _modelsTileContainer2 = _interopRequireDefault(_modelsTileContainer);
-
-var _modelsTile = require("models/Tile");
-
-var _modelsTile2 = _interopRequireDefault(_modelsTile);
-
-var _modelsColorMaster = require("models/ColorMaster");
-
-var _modelsColorMaster2 = _interopRequireDefault(_modelsColorMaster);
-
-var _modelsPool = require("models/Pool");
-
-var _modelsPool2 = _interopRequireDefault(_modelsPool);
-
-var _wu = require("wu");
-
-var _wu2 = _interopRequireDefault(_wu);
 
 var Started = (function () {
   function Started(game) {
@@ -29904,7 +29864,7 @@ var Started = (function () {
 exports["default"] = Started;
 module.exports = exports["default"];
 
-},{"models/ColorMaster":207,"models/Hint":208,"models/Pool":209,"models/Rand":211,"models/Tile":212,"models/TileContainer":213,"wu":193}],219:[function(require,module,exports){
+},{}],219:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
