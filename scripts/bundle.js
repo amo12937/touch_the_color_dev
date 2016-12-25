@@ -28241,6 +28241,10 @@ var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactAddonsCssTransitionGroup = require("react-addons-css-transition-group");
+
+var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
+
 var _componentsScoreHintContainer = require("components/ScoreHintContainer");
 
 var _componentsScoreHintContainer2 = _interopRequireDefault(_componentsScoreHintContainer);
@@ -28252,6 +28256,10 @@ var _componentsTimer2 = _interopRequireDefault(_componentsTimer);
 var _componentsBoardBoard = require("components/board/Board");
 
 var _componentsBoardBoard2 = _interopRequireDefault(_componentsBoardBoard);
+
+var _componentsGameOver = require("components/GameOver");
+
+var _componentsGameOver2 = _interopRequireDefault(_componentsGameOver);
 
 var _modelsGameGame = require("models/game/Game");
 
@@ -28318,6 +28326,8 @@ var App = (function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
+      var gameOver = this.state.gameState == this.state.gameStates.FINISHED && _react2["default"].createElement(_componentsGameOver2["default"], { onClickRetry: this.handleRetry });
+
       return _react2["default"].createElement(
         "div",
         { className: "app" },
@@ -28342,9 +28352,12 @@ var App = (function (_React$Component) {
           })
         ),
         _react2["default"].createElement(
-          "div",
-          { onClick: this.handleRetry },
-          "retry"
+          _reactAddonsCssTransitionGroup2["default"],
+          {
+            transitionName: "game-over",
+            transitionEnterTimeout: 2000,
+            transitionLeaveTimeout: 400 },
+          gameOver
         )
       );
     }
@@ -28356,7 +28369,76 @@ var App = (function (_React$Component) {
 exports["default"] = App;
 module.exports = exports["default"];
 
-},{"components/ScoreHintContainer":195,"components/Timer":197,"components/board/Board":198,"models/game/Game":215,"react":192}],195:[function(require,module,exports){
+},{"components/GameOver":195,"components/ScoreHintContainer":196,"components/Timer":198,"components/board/Board":199,"models/game/Game":216,"react":192,"react-addons-css-transition-group":28}],195:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactAddonsCssTransitionGroup = require("react-addons-css-transition-group");
+
+var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
+
+var GameOver = (function (_React$Component) {
+  _inherits(GameOver, _React$Component);
+
+  function GameOver(props) {
+    _classCallCheck(this, GameOver);
+
+    _get(Object.getPrototypeOf(GameOver.prototype), "constructor", this).call(this, props);
+    this.handleClickRetry = this.handleClickRetry.bind(this);
+  }
+
+  _createClass(GameOver, [{
+    key: "handleClickRetry",
+    value: function handleClickRetry() {
+      this.props.onClickRetry();
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return _react2["default"].createElement(
+        "div",
+        { className: "game-over" },
+        _react2["default"].createElement(
+          "div",
+          { className: "game-over-outer" },
+          _react2["default"].createElement(
+            "div",
+            { className: "game-over-inner" },
+            _react2["default"].createElement(
+              "div",
+              { className: "game-over-retry", onClick: this.handleClickRetry },
+              "retry"
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return GameOver;
+})(_react2["default"].Component);
+
+exports["default"] = GameOver;
+module.exports = exports["default"];
+
+},{"react":192,"react-addons-css-transition-group":28}],196:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28412,7 +28494,7 @@ var ScoreHintContainer = (function (_React$Component) {
 exports["default"] = ScoreHintContainer;
 module.exports = exports["default"];
 
-},{"components/hint/HintContainer":202,"components/score/ScoreContainer":204,"react":192}],196:[function(require,module,exports){
+},{"components/hint/HintContainer":203,"components/score/ScoreContainer":205,"react":192}],197:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28467,7 +28549,7 @@ var Tile = (function (_React$Component) {
 exports["default"] = Tile;
 module.exports = exports["default"];
 
-},{"react":192}],197:[function(require,module,exports){
+},{"react":192}],198:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28589,7 +28671,7 @@ var Timer = (function (_React$Component3) {
 exports["default"] = Timer;
 module.exports = exports["default"];
 
-},{"react":192}],198:[function(require,module,exports){
+},{"react":192}],199:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28653,7 +28735,7 @@ var Board = (function (_React$Component) {
 exports["default"] = Board;
 module.exports = exports["default"];
 
-},{"components/board/BoardRow":200,"react":192}],199:[function(require,module,exports){
+},{"components/board/BoardRow":201,"react":192}],200:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28746,7 +28828,7 @@ var BoardCell = (function (_React$Component) {
 exports["default"] = BoardCell;
 module.exports = exports["default"];
 
-},{"components/Tile":196,"react":192,"react-addons-css-transition-group":28,"react-animate-on-change":29,"wu":193}],200:[function(require,module,exports){
+},{"components/Tile":197,"react":192,"react-addons-css-transition-group":28,"react-animate-on-change":29,"wu":193}],201:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28810,7 +28892,7 @@ var BoardRow = (function (_React$Component) {
 exports["default"] = BoardRow;
 module.exports = exports["default"];
 
-},{"components/board/BoardCell":199,"react":192}],201:[function(require,module,exports){
+},{"components/board/BoardCell":200,"react":192}],202:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28862,7 +28944,7 @@ var Hint = (function (_React$Component) {
 exports["default"] = Hint;
 module.exports = exports["default"];
 
-},{"components/Tile":196,"react":192}],202:[function(require,module,exports){
+},{"components/Tile":197,"react":192}],203:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28927,7 +29009,7 @@ var HintContainer = (function (_React$Component) {
 exports["default"] = HintContainer;
 module.exports = exports["default"];
 
-},{"components/hint/Hint":201,"react":192,"react-addons-css-transition-group":28}],203:[function(require,module,exports){
+},{"components/hint/Hint":202,"react":192,"react-addons-css-transition-group":28}],204:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29031,7 +29113,7 @@ var Score = (function (_React$Component) {
 exports["default"] = Score;
 module.exports = exports["default"];
 
-},{"react":192,"react-addons-css-transition-group":28}],204:[function(require,module,exports){
+},{"react":192,"react-addons-css-transition-group":28}],205:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29083,7 +29165,7 @@ var ScoreContainer = (function (_React$Component) {
 exports["default"] = ScoreContainer;
 module.exports = exports["default"];
 
-},{"components/score/Score":203,"react":192}],205:[function(require,module,exports){
+},{"components/score/Score":204,"react":192}],206:[function(require,module,exports){
 "use strict";
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -29108,7 +29190,7 @@ document.addEventListener("touchmove", function (e) {
   e.preventDefault();
 });
 
-},{"./components/App":194,"react":192,"react-dom":30}],206:[function(require,module,exports){
+},{"./components/App":194,"react":192,"react-dom":30}],207:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29159,7 +29241,7 @@ var Color = (function () {
 exports["default"] = Color;
 module.exports = exports["default"];
 
-},{}],207:[function(require,module,exports){
+},{}],208:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29217,7 +29299,7 @@ exports["default"] = [[new _modelsColor2["default"](0x3a, 0x30, 0x42), new _mode
  */
 module.exports = exports["default"];
 
-},{"models/Color":206}],208:[function(require,module,exports){
+},{"models/Color":207}],209:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29276,7 +29358,7 @@ var Hint = (function () {
 exports["default"] = Hint;
 module.exports = exports["default"];
 
-},{"wu":193}],209:[function(require,module,exports){
+},{"wu":193}],210:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29329,7 +29411,7 @@ var Pool = (function () {
 exports["default"] = Pool;
 module.exports = exports["default"];
 
-},{"models/Rand":211}],210:[function(require,module,exports){
+},{"models/Rand":212}],211:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29366,7 +29448,7 @@ var PrefixStorage = (function () {
 exports["default"] = PrefixStorage;
 module.exports = exports["default"];
 
-},{}],211:[function(require,module,exports){
+},{}],212:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29394,7 +29476,7 @@ exports["default"] = (function () {
 
 module.exports = exports["default"];
 
-},{"wu":193}],212:[function(require,module,exports){
+},{"wu":193}],213:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29421,7 +29503,7 @@ var Tile = function Tile(bgColor) {
 exports["default"] = Tile;
 module.exports = exports["default"];
 
-},{}],213:[function(require,module,exports){
+},{}],214:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29470,7 +29552,7 @@ var TileContainer = function TileContainer(size, pool) {
 exports["default"] = TileContainer;
 module.exports = exports["default"];
 
-},{"wu":193}],214:[function(require,module,exports){
+},{"wu":193}],215:[function(require,module,exports){
 "use strict";
 
 /*
@@ -29553,7 +29635,7 @@ var Timer = (function () {
 exports["default"] = Timer;
 module.exports = exports["default"];
 
-},{}],215:[function(require,module,exports){
+},{}],216:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29758,7 +29840,7 @@ var Game = (function () {
 exports["default"] = Game;
 module.exports = exports["default"];
 
-},{"javascript-state-machine":25,"models/Color":206,"models/ColorMaster":207,"models/Hint":208,"models/Pool":209,"models/PrefixStorage":210,"models/Rand":211,"models/Tile":212,"models/TileContainer":213,"models/Timer":214,"models/game/states/Finished":216,"models/game/states/Init":217,"models/game/states/Started":218,"models/score/Score":219,"models/score/ScoreTable":220,"wu":193}],216:[function(require,module,exports){
+},{"javascript-state-machine":25,"models/Color":207,"models/ColorMaster":208,"models/Hint":209,"models/Pool":210,"models/PrefixStorage":211,"models/Rand":212,"models/Tile":213,"models/TileContainer":214,"models/Timer":215,"models/game/states/Finished":217,"models/game/states/Init":218,"models/game/states/Started":219,"models/score/Score":220,"models/score/ScoreTable":221,"wu":193}],217:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29803,7 +29885,7 @@ var Finished = (function () {
 exports["default"] = Finished;
 module.exports = exports["default"];
 
-},{}],217:[function(require,module,exports){
+},{}],218:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29853,7 +29935,7 @@ var Init = (function () {
 exports["default"] = Init;
 module.exports = exports["default"];
 
-},{}],218:[function(require,module,exports){
+},{}],219:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29907,7 +29989,7 @@ var Started = (function () {
 exports["default"] = Started;
 module.exports = exports["default"];
 
-},{}],219:[function(require,module,exports){
+},{}],220:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29978,7 +30060,7 @@ var Score = (function () {
 exports["default"] = Score;
 module.exports = exports["default"];
 
-},{"models/score/ScoreValue":221}],220:[function(require,module,exports){
+},{"models/score/ScoreValue":222}],221:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30012,7 +30094,7 @@ var ScoreTable = (function () {
 exports["default"] = ScoreTable;
 module.exports = exports["default"];
 
-},{}],221:[function(require,module,exports){
+},{}],222:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30057,4 +30139,4 @@ var ScoreValue = (function () {
 exports["default"] = ScoreValue;
 module.exports = exports["default"];
 
-},{}]},{},[205]);
+},{}]},{},[206]);
