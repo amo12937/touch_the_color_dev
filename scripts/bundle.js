@@ -29436,26 +29436,18 @@ var _wu = require("wu");
 
 var _wu2 = _interopRequireDefault(_wu);
 
-var TileContainer = function TileContainer(size, poolList) {
+var TileContainer = function TileContainer(size, pool) {
   var _this = this;
 
   _classCallCheck(this, TileContainer);
 
-  var cp = 0;
-
-  this.updatePoolPointer = function () {
-    cp = Math.min(cp + 1, poolList.length - 1);
+  this.updatePool = function (newPool) {
+    pool = newPool;
   };
 
-  this.resetPoolPointer = function () {
-    cp = 0;
-  };
-
-  var tiles = (function (pool) {
-    return Array.from(_wu2["default"].count().take(size).map(function () {
-      return pool.borrow();
-    }));
-  })(poolList[cp]);
+  var tiles = Array.from(_wu2["default"].count().take(size).map(function () {
+    return pool.borrow();
+  }));
 
   this.trySelect = function (i) {
     return 0 <= i && i < size;
@@ -29464,11 +29456,10 @@ var TileContainer = function TileContainer(size, poolList) {
   this.select = function (i) {
     if (!_this.trySelect(i)) return false;
     var oldItem = tiles[i];
-    tiles[i] = poolList[cp].borrow();
+    tiles[i] = pool.borrow();
     oldItem.backToPool();
     return true;
   };
-
   this.tiles = function () {
     return tiles.map(function (tile) {
       return tile.item;
@@ -29660,7 +29651,7 @@ var Game = (function () {
           self.scoreTable = self._makeScoreTable();
           self._tileUpdationRule = self._makeTileUpdationRule();
           self._hintContainer = self._makeHintContainer();
-          self._tileContainer = self._makeTileContainer();
+          self._tileContainer = self._makeTileContainer(self._tileUpdationRule.shift().pool);
           self.state = self.states.INIT;
         },
         onStarted: function onStarted() {
@@ -29684,7 +29675,19 @@ var Game = (function () {
   }, {
     key: "_makeTileUpdationRule",
     value: function _makeTileUpdationRule() {
-      return [1000];
+      return [{
+        score: 0,
+        pool: new _modelsPool2["default"](_modelsColorMaster2["default"][0].map(function (color) {
+          return new _modelsTile2["default"](color);
+        }))
+      }, {
+        score: 1000,
+        pool: new _modelsPool2["default"]([].concat.apply([], _modelsColorMaster2["default"][1].map(function (color) {
+          return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(function (i) {
+            return new _modelsTile2["default"](color, color, i);
+          });
+        })))
+      }];
     }
   }, {
     key: "_makeHintContainer",
@@ -29693,14 +29696,8 @@ var Game = (function () {
     }
   }, {
     key: "_makeTileContainer",
-    value: function _makeTileContainer() {
-      return new _modelsTileContainer2["default"](9, [new _modelsPool2["default"](_modelsColorMaster2["default"][0].map(function (color) {
-        return new _modelsTile2["default"](color);
-      })), new _modelsPool2["default"]([].concat.apply([], _modelsColorMaster2["default"][1].map(function (color) {
-        return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(function (i) {
-          return new _modelsTile2["default"](color, color, i);
-        });
-      })))]);
+    value: function _makeTileContainer(pool) {
+      return new _modelsTileContainer2["default"](9, pool);
     }
   }, {
     key: "retry",
@@ -29718,9 +29715,8 @@ var Game = (function () {
       var now = Date.now();
       this.score.count(this.scoreTable.getScore(this.timer.percent(now)));
       this.timer.add(now, 1000);
-      if (this._tileUpdationRule.length > 0 && this.score.current.value >= this._tileUpdationRule[0]) {
-        this._tileUpdationRule.shift();
-        this._tileContainer.updatePoolPointer();
+      if (this._tileUpdationRule.length > 0 && this.score.current.value >= this._tileUpdationRule[0].score) {
+        this._tileContainer.updatePool(this._tileUpdationRule.shift().pool);
         this._hintContainer.cleanup();
       }
       this._tileContainer.select(cellId);
