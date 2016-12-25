@@ -29711,8 +29711,7 @@ var Game = (function () {
     }
   }, {
     key: "_update",
-    value: function _update(cellId) {
-      var now = Date.now();
+    value: function _update(cellId, now) {
       this.score.count(this.scoreTable.getScore(this.timer.percent(now)));
       this.timer.add(now, 1000);
       if (this._tileUpdationRule.length > 0 && this.score.current.value >= this._tileUpdationRule[0].score) {
@@ -29725,7 +29724,7 @@ var Game = (function () {
   }, {
     key: "select",
     value: function select(cellId) {
-      return this.state.select(cellId);
+      return this.state.select(cellId, Date.now());
     }
   }, {
     key: "hints",
@@ -29809,10 +29808,10 @@ var Init = (function () {
 
   _createClass(Init, [{
     key: "select",
-    value: function select(cellId) {
+    value: function select(cellId, now) {
       var firstCellId = this._game._hintContainer.hints[0];
       if (cellId != firstCellId) return false;
-      this._game._update(cellId);
+      this._game._update(cellId, now);
       this._game._fsm.start();
       return true;
     }
@@ -29854,14 +29853,14 @@ var Started = (function () {
 
   _createClass(Started, [{
     key: "select",
-    value: function select(cellId) {
+    value: function select(cellId, now) {
       var game = this._game;
       if (game._hintContainer.canUpdate(cellId) && game._tileContainer.trySelect(cellId)) {
-        game._update(cellId);
+        game._update(cellId, now);
         return true;
       }
 
-      if (!game.timer.add(Date.now(), -1500)) game.timeup();
+      if (!game.timer.add(now, -1500)) game.timeup();
       return false;
     }
   }, {
