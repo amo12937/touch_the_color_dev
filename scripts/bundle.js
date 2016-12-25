@@ -28276,7 +28276,7 @@ var App = (function (_React$Component) {
   _createClass(App, [{
     key: "handleClick",
     value: function handleClick(cellId) {
-      if (!this.game.select(cellId)) {
+      if (!this.game.select(cellId, Date.now())) {
         var failed = {};
         failed[cellId] = true;
         this.setState({
@@ -28292,7 +28292,7 @@ var App = (function (_React$Component) {
   }, {
     key: "handleTimeup",
     value: function handleTimeup() {
-      this.game.timeup();
+      this.game.timeup(Date.now());
       this.setState(this.getState());
     }
   }, {
@@ -29526,6 +29526,11 @@ var Timer = (function () {
       return this.startTime <= currentTime && currentTime < this.endTime;
     }
   }, {
+    key: "isFinished",
+    value: function isFinished(currentTime) {
+      return this.endTime <= currentTime;
+    }
+  }, {
     key: "elapsedTime",
     value: function elapsedTime(currentTime) {
       return Math.min(this.max, Math.max(0, currentTime - this.startTime));
@@ -29533,12 +29538,12 @@ var Timer = (function () {
   }, {
     key: "remain",
     value: function remain(currentTime) {
-      return Math.min(this.max, Math.max(0, this.endTime - currentTime));
+      return this.max - this.elapsedTime(currentTime);
     }
   }, {
     key: "percent",
     value: function percent(currentTime) {
-      return Math.floor(100 * (this.max - this.remain(currentTime)) / this.max);
+      return Math.floor(100 * this.elapsedTime(currentTime) / this.max);
     }
   }]);
 
@@ -29648,6 +29653,7 @@ var Game = (function () {
       callbacks: {
         onInit: function onInit() {
           self.score.reset();
+          self.timer.reset();
           self.scoreTable = self._makeScoreTable();
           self._tileUpdationRule = self._makeTileUpdationRule();
           self._hintContainer = self._makeHintContainer();
@@ -29702,12 +29708,12 @@ var Game = (function () {
   }, {
     key: "retry",
     value: function retry() {
-      this._fsm.retry();
+      this.state.retry();
     }
   }, {
     key: "timeup",
-    value: function timeup() {
-      this._fsm.timeup();
+    value: function timeup(now) {
+      this.state.timeup(now);
     }
   }, {
     key: "_update",
@@ -29723,8 +29729,8 @@ var Game = (function () {
     }
   }, {
     key: "select",
-    value: function select(cellId) {
-      return this.state.select(cellId, Date.now());
+    value: function select(cellId, now) {
+      return this.state.select(cellId, now);
     }
   }, {
     key: "hints",
@@ -29764,9 +29770,10 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Finished = (function () {
-  function Finished() {
+  function Finished(game) {
     _classCallCheck(this, Finished);
 
+    this._game = game;
     this._appeals = {};
   }
 
@@ -29780,6 +29787,14 @@ var Finished = (function () {
     value: function appeals() {
       return this._appeals;
     }
+  }, {
+    key: "retry",
+    value: function retry() {
+      this._game._fsm.retry();
+    }
+  }, {
+    key: "timeup",
+    value: function timeup() {}
   }]);
 
   return Finished;
@@ -29824,6 +29839,12 @@ var Init = (function () {
 
       return appeals;
     }
+  }, {
+    key: "retry",
+    value: function retry() {}
+  }, {
+    key: "timeup",
+    value: function timeup() {}
   }]);
 
   return Init;
@@ -29860,13 +29881,23 @@ var Started = (function () {
         return true;
       }
 
-      if (!game.timer.add(now, -1500)) game.timeup();
+      game.timer.add(now, -1500);
+      game.timeup(now);
       return false;
     }
   }, {
     key: "appeals",
     value: function appeals() {
       return this._appeals;
+    }
+  }, {
+    key: "retry",
+    value: function retry() {}
+  }, {
+    key: "timeup",
+    value: function timeup(now) {
+      var game = this._game;
+      if (game.timer.isFinished(now)) game._fsm.timeup();
     }
   }]);
 
