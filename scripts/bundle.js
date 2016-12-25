@@ -29290,15 +29290,17 @@ var PoolItem = function PoolItem(item, backToPool) {
 
 var Pool = (function () {
   function Pool(items) {
+    var _this = this;
+
     _classCallCheck(this, Pool);
 
-    var self = this;
+    var backToPool = (function (poolItem) {
+      return function () {
+        return _this._poolItems.push(poolItem);
+      };
+    }).bind(this);
     this._poolItems = items.map(function (item) {
-      return new PoolItem(item, function (poolItem) {
-        return function () {
-          return self._poolItems.push(poolItem);
-        };
-      });
+      return new PoolItem(item, backToPool);
     });
   }
 
@@ -29414,8 +29416,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -29424,59 +29424,45 @@ var _wu = require("wu");
 
 var _wu2 = _interopRequireDefault(_wu);
 
-var TileContainer = (function () {
-  function TileContainer(size, poolList) {
-    _classCallCheck(this, TileContainer);
+var TileContainer = function TileContainer(size, poolList) {
+  var _this = this;
 
-    this._size = size;
-    this._cp = 0; // currentPool
-    this._poolList = poolList;
-    var pool = this._currentPool();
-    this._tiles = Array.from(_wu2["default"].repeat(0).take(size).map(function () {
+  _classCallCheck(this, TileContainer);
+
+  var cp = 0;
+
+  this.updatePoolPointer = function () {
+    cp = Math.min(cp + 1, poolList.length - 1);
+  };
+
+  this.resetPoolPointer = function () {
+    cp = 0;
+  };
+
+  var tiles = (function (pool) {
+    return Array.from(_wu2["default"].count().take(size).map(function () {
       return pool.borrow();
     }));
-  }
+  })(poolList[cp]);
 
-  _createClass(TileContainer, [{
-    key: "updatePoolPointer",
-    value: function updatePoolPointer() {
-      this._cp = Math.min(this._cp + 1, this._poolList.length - 1);
-    }
-  }, {
-    key: "resetPoolPointer",
-    value: function resetPoolPointer() {
-      this._cp = 0;
-    }
-  }, {
-    key: "_currentPool",
-    value: function _currentPool() {
-      return this._poolList[this._cp];
-    }
-  }, {
-    key: "trySelect",
-    value: function trySelect(i) {
-      return 0 <= i && i < this._size;
-    }
-  }, {
-    key: "select",
-    value: function select(i) {
-      if (!this.trySelect(i)) return false;
-      var oldItem = this._tiles[i];
-      this._tiles[i] = this._currentPool().borrow();
-      oldItem.backToPool();
-      return true;
-    }
-  }, {
-    key: "tiles",
-    value: function tiles() {
-      return this._tiles.map(function (tile) {
-        return tile.item;
-      });
-    }
-  }]);
+  this.trySelect = function (i) {
+    return 0 <= i && i < size;
+  };
 
-  return TileContainer;
-})();
+  this.select = function (i) {
+    if (!_this.trySelect(i)) return false;
+    var oldItem = tiles[i];
+    tiles[i] = poolList[cp].borrow();
+    oldItem.backToPool();
+    return true;
+  };
+
+  this.tiles = function () {
+    return tiles.map(function (tile) {
+      return tile.item;
+    });
+  };
+};
 
 exports["default"] = TileContainer;
 module.exports = exports["default"];
