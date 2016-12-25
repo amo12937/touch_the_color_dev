@@ -28509,8 +28509,8 @@ var TimerActive = (function (_React$Component) {
       var timer = this.props.timer;
 
       return _react2["default"].createElement("div", { className: "timer_front timer_front-active", style: {
-          width: timer.percent(now) + "%",
-          animationDuration: timer.remain(now) + "ms"
+          animationDuration: timer.max + "ms",
+          animationDelay: "-" + timer.elapsedTime(now) + "ms"
         } });
     }
   }]);
@@ -29521,6 +29521,11 @@ var Timer = (function () {
     key: "isRunning",
     value: function isRunning(currentTime) {
       return this.startTime <= currentTime && currentTime < this.endTime;
+    }
+  }, {
+    key: "elapsedTime",
+    value: function elapsedTime(currentTime) {
+      return Math.min(this.max, Math.max(0, currentTime - this.startTime));
     }
   }, {
     key: "remain",

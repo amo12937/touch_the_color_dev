@@ -222,13 +222,14 @@ html, body {
   width: 100%;
   height: 100%;
   background-color: #cccccc;
-  border-radius: 2vmin; }
+  border-radius: 0.5vmin;
+  overflow: hidden; }
 
 .timer_front {
   width: 0%;
   height: 100%;
-  background-color: #ff0000;
-  border-radius: 2vmin; }
+  background-color: #ff5f38;
+  border-radius: 0.5vmin; }
 
 .timer_front-active {
   -webkit-animation-name: animation-timer-front;
@@ -241,12 +242,44 @@ html, body {
           animation-fill-mode: forwards; }
 
 @-webkit-keyframes animation-timer-front {
+  0% {
+    width: 0%;
+    background-color: #4f92ff; }
+  9.9% {
+    background-color: #4f92ff; }
+  10% {
+    background-color: #3bf42e; }
+  24.9% {
+    background-color: #3bf42e; }
+  25% {
+    background-color: #fde84c; }
+  49.9% {
+    background-color: #fde84c; }
+  50% {
+    background-color: #ff5f38; }
   100% {
-    width: 100%; } }
+    width: 100%;
+    background-color: #ff5f38; } }
 
 @keyframes animation-timer-front {
+  0% {
+    width: 0%;
+    background-color: #4f92ff; }
+  9.9% {
+    background-color: #4f92ff; }
+  10% {
+    background-color: #3bf42e; }
+  24.9% {
+    background-color: #3bf42e; }
+  25% {
+    background-color: #fde84c; }
+  49.9% {
+    background-color: #fde84c; }
+  50% {
+    background-color: #ff5f38; }
   100% {
-    width: 100%; } }
+    width: 100%;
+    background-color: #ff5f38; } }
 
 .hint_container {
   width: 46vmin;
