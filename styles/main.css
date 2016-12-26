@@ -47,7 +47,8 @@ table {
 
 /* layout */
 html, body {
-  overflow: hidden; }
+  overflow: hidden;
+  font-family: ".Hiragino Kaku Gothic Interface"; }
 
 .app {
   width: 100%;
