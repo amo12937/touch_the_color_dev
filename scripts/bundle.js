@@ -29182,7 +29182,13 @@ var _componentsApp = require("./components/App");
 
 var _componentsApp2 = _interopRequireDefault(_componentsApp);
 
+var _prevent_zoom = require("./prevent_zoom");
+
+var _prevent_zoom2 = _interopRequireDefault(_prevent_zoom);
+
 document.addEventListener("DOMContentLoaded", function () {
+  (0, _prevent_zoom2["default"])(document);
+
   _reactDom2["default"].render(_react2["default"].createElement(_componentsApp2["default"], null), document.getElementById("root"));
 });
 
@@ -29190,7 +29196,7 @@ document.addEventListener("touchmove", function (e) {
   e.preventDefault();
 });
 
-},{"./components/App":194,"react":192,"react-dom":30}],207:[function(require,module,exports){
+},{"./components/App":194,"./prevent_zoom":223,"react":192,"react-dom":30}],207:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30137,6 +30143,34 @@ var ScoreValue = (function () {
 })();
 
 exports["default"] = ScoreValue;
+module.exports = exports["default"];
+
+},{}],223:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+exports["default"] = function (d) {
+  d.addEventListener("touchstart", function (e) {
+    if (e.touches.length > 1) {
+      e.preventDefault();
+    }
+  }, true);
+
+  (function () {
+    var lastTouch = 0;
+    d.addEventListener("touchend", function (e) {
+      var now = Date.now();
+      if (now - lastTouch < 500) {
+        e.preventDefault();
+      }
+      lastTouch = now;
+    }, true);
+  })();
+};
+
 module.exports = exports["default"];
 
 },{}]},{},[206]);
