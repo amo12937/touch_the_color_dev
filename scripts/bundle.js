@@ -28417,15 +28417,11 @@ var GameOver = (function (_React$Component) {
         { className: "game-over" },
         _react2["default"].createElement(
           "div",
-          { className: "game-over-outer" },
+          { className: "game-over-inner" },
           _react2["default"].createElement(
             "div",
-            { className: "game-over-inner" },
-            _react2["default"].createElement(
-              "div",
-              { className: "game-over-retry", onClick: this.handleClickRetry },
-              "retry"
-            )
+            { className: "game-over-retry", onClick: this.handleClickRetry },
+            "retry"
           )
         )
       );
