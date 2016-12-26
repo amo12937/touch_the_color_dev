@@ -53,23 +53,44 @@ html, body {
   width: 100%;
   height: 100%; }
 
+.logo-inner {
+  width: 76vmin;
+  height: 16vmin; }
+
 .app_content {
   width: 100vmin;
   height: 100vmin;
   margin: 0 auto;
-  padding-top: 15vmin; }
+  padding-top: 16vmin; }
 
 .game-over-inner {
   width: 72vmin;
   height: 24vmin;
-  padding-top: 116vmin;
+  padding-top: 117vmin;
   margin: 0 auto; }
 
 @media screen and (min-aspect-ratio: 2 / 3) {
+  .logo-inner {
+    width: 30vmin;
+    height: 6vmin;
+    margin-left: auto; }
   .app_content {
     padding-top: 0; }
   .game-over-inner {
     padding-top: 47.5vmin; } }
+
+.logo {
+  width: 76vmin;
+  height: 16vmin;
+  margin: 0 auto 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0; }
+
+.logo-image {
+  width: 100%;
+  height: 100%; }
 
 .board {
   width: 81vmin;
