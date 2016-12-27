@@ -29260,12 +29260,12 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Color = (function () {
-  function Color(r, g, b) {
+  function Color(rgb) {
     _classCallCheck(this, Color);
 
-    this._r = r;
-    this._g = g;
-    this._b = b;
+    this._r = (rgb >> 16) % 0x100;
+    this._g = (rgb >> 8) % 0x100;
+    this._b = (rgb >> 0) % 0x100;
   }
 
   _createClass(Color, [{
@@ -29289,7 +29289,7 @@ var Color = (function () {
   }, {
     key: "textColor",
     value: function textColor() {
-      return this.isBright() ? new Color(0, 0, 0) : new Color(0xff, 0xff, 0xff);
+      return this.isBright() ? new Color(0) : new Color(0xffffff);
     }
   }]);
 
@@ -29312,49 +29312,7 @@ var _modelsColor = require("models/Color");
 
 var _modelsColor2 = _interopRequireDefault(_modelsColor);
 
-exports["default"] = [[new _modelsColor2["default"](0x3a, 0x30, 0x42), new _modelsColor2["default"](0x49, 0x39, 0x2c), new _modelsColor2["default"](0x3b, 0x28, 0xcc), new _modelsColor2["default"](0x8c, 0x27, 0x1e), new _modelsColor2["default"](0xf4, 0x00, 0x00), new _modelsColor2["default"](0x83, 0x32, 0xac), new _modelsColor2["default"](0x77, 0x62, 0x5c), new _modelsColor2["default"](0xff, 0x78, 0x4f), new _modelsColor2["default"](0xdb, 0x9d, 0x47), new _modelsColor2["default"](0xe0, 0x86, 0xd3), new _modelsColor2["default"](0x1b, 0xe7, 0xff), new _modelsColor2["default"](0xff, 0xb8, 0x00), new _modelsColor2["default"](0x6e, 0xeb, 0x83), new _modelsColor2["default"](0xad, 0xd7, 0xf6), new _modelsColor2["default"](0xe4, 0xff, 0x1a), new _modelsColor2["default"](0xff, 0xe1, 0x9c), new _modelsColor2["default"](0xed, 0xff, 0xd9)], [new _modelsColor2["default"](0x98, 0xd2, 0xeb), new _modelsColor2["default"](0xe1, 0xf2, 0xfe), new _modelsColor2["default"](0xb2, 0xb1, 0xcf), new _modelsColor2["default"](0xab, 0xa1, 0x94), new _modelsColor2["default"](0xcf, 0xcb, 0xca), new _modelsColor2["default"](0xd8, 0xdd, 0xde), new _modelsColor2["default"](0xd9, 0xf7, 0xfa), new _modelsColor2["default"](0x2f, 0x4b, 0x26), new _modelsColor2["default"](0x3e, 0x88, 0x5b), new _modelsColor2["default"](0x85, 0xbd, 0xa6), new _modelsColor2["default"](0xbe, 0xdc, 0xfe), new _modelsColor2["default"](0xc0, 0xd7, 0xbb), new _modelsColor2["default"](0xba, 0xd1, 0xcd), new _modelsColor2["default"](0xf2, 0xd1, 0xc9), new _modelsColor2["default"](0x46, 0x27, 0x49), new _modelsColor2["default"](0x87, 0xbf, 0xff), new _modelsColor2["default"](0x3f, 0x8e, 0xfc), new _modelsColor2["default"](0x26, 0x67, 0xff), new _modelsColor2["default"](0xed, 0x3f, 0x2f), new _modelsColor2["default"](0xf4, 0x79, 0x6b), new _modelsColor2["default"](0xf4, 0x99, 0x8d)]];
-
-// https://coolors.co/c6fbff-ffe0ea-ffe1c6-edd7ec-fff7ae
-/*
-  new Color(0x3a, 0x30, 0x42),
-  new Color(0xdb, 0x9d, 0x47),
-  new Color(0xff, 0x78, 0x4f),
-  new Color(0xff, 0xe1, 0x9c),
-  new Color(0xed, 0xff, 0xd9),
-//  new Color(0x98, 0xd2, 0xeb),
-//  new Color(0xe1, 0xf2, 0xfe),
-//  new Color(0xb2, 0xb1, 0xcf),
-  new Color(0x77, 0x62, 0x5c),
-  new Color(0x49, 0x39, 0x2c),
-  new Color(0x8c, 0x27, 0x1e),
-//  new Color(0xab, 0xa1, 0x94),
-//  new Color(0xcf, 0xcb, 0xca),
-//  new Color(0xd8, 0xdd, 0xde),
-//  new Color(0xd9, 0xf7, 0xfa),
-//  new Color(0x2f, 0x4b, 0x26),
-//  new Color(0x3e, 0x88, 0x5b),
-//  new Color(0x85, 0xbd, 0xa6),
-//  new Color(0xbe, 0xdc, 0xfe),
-//  new Color(0xc0, 0xd7, 0xbb),
-//  new Color(0xba, 0xd1, 0xcd),
-//  new Color(0xf2, 0xd1, 0xc9),
-  new Color(0xe0, 0x86, 0xd3),
-  new Color(0x83, 0x32, 0xac),
-//  new Color(0x46, 0x27, 0x49),
-  new Color(0xad, 0xd7, 0xf6),
-//  new Color(0x87, 0xbf, 0xff),
-//  new Color(0x3f, 0x8e, 0xfc),
-//  new Color(0x26, 0x67, 0xff),
-  new Color(0x3b, 0x28, 0xcc),
-  new Color(0x1b, 0xe7, 0xff),
-  new Color(0x6e, 0xeb, 0x83),
-  new Color(0xe4, 0xff, 0x1a),
-  new Color(0xff, 0xb8, 0x00),
-//  new Color(0xed, 0x3f, 0x2f),
-  new Color(0xf4, 0x00, 0x00),
-//  new Color(0xf4, 0x79, 0x6b),
-//  new Color(0xf4, 0x99, 0x8d)
- */
+exports["default"] = [[new _modelsColor2["default"](0x3a3042), new _modelsColor2["default"](0x49392c), new _modelsColor2["default"](0x3b28cc), new _modelsColor2["default"](0x8c271e), new _modelsColor2["default"](0xf40000), new _modelsColor2["default"](0x8332ac), new _modelsColor2["default"](0x77625c), new _modelsColor2["default"](0xff784f), new _modelsColor2["default"](0xdb9d47), new _modelsColor2["default"](0xe086d3), new _modelsColor2["default"](0x1be7ff), new _modelsColor2["default"](0xffb800), new _modelsColor2["default"](0x6eeb83), new _modelsColor2["default"](0xadd7f6), new _modelsColor2["default"](0xe4ff1a), new _modelsColor2["default"](0xffe19c), new _modelsColor2["default"](0xedffd9)], [new _modelsColor2["default"](0x98d2eb), new _modelsColor2["default"](0xe1f2fe), new _modelsColor2["default"](0xb2b1cf), new _modelsColor2["default"](0xaba194), new _modelsColor2["default"](0xcfcbca), new _modelsColor2["default"](0xd8ddde), new _modelsColor2["default"](0xd9f7fa), new _modelsColor2["default"](0x2f4b26), new _modelsColor2["default"](0x3e885b), new _modelsColor2["default"](0x85bda6), new _modelsColor2["default"](0xbedcfe), new _modelsColor2["default"](0xc0d7bb), new _modelsColor2["default"](0xbad1cd), new _modelsColor2["default"](0xf2d1c9), new _modelsColor2["default"](0x462749), new _modelsColor2["default"](0x87bfff), new _modelsColor2["default"](0x3f8efc), new _modelsColor2["default"](0x2667ff), new _modelsColor2["default"](0xed3f2f), new _modelsColor2["default"](0xf4796b), new _modelsColor2["default"](0xf4998d)]];
 module.exports = exports["default"];
 
 },{"models/Color":208}],210:[function(require,module,exports){
