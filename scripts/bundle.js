@@ -28265,6 +28265,10 @@ var _componentsGameOver = require("components/GameOver");
 
 var _componentsGameOver2 = _interopRequireDefault(_componentsGameOver);
 
+var _modelsMasterLevelMaster = require("models/master/LevelMaster");
+
+var _modelsMasterLevelMaster2 = _interopRequireDefault(_modelsMasterLevelMaster);
+
 var _modelsGameGame = require("models/game/Game");
 
 var _modelsGameGame2 = _interopRequireDefault(_modelsGameGame);
@@ -28276,7 +28280,9 @@ var App = (function (_React$Component) {
     _classCallCheck(this, App);
 
     _get(Object.getPrototypeOf(App.prototype), "constructor", this).call(this, props);
-    this.game = new _modelsGameGame2["default"]();
+    this.size = 3;
+    var lv = _modelsMasterLevelMaster2["default"][this.size][0];
+    this.game = new _modelsGameGame2["default"](this.size, lv);
 
     this.state = this.getState();
 
@@ -28325,7 +28331,7 @@ var App = (function (_React$Component) {
         tiles: this.game.tiles(),
         appeals: this.game.appeals(),
         failed: {},
-        num: this.game.currentNum
+        num: this.size
       };
     }
   }, {
@@ -28375,7 +28381,7 @@ var App = (function (_React$Component) {
 exports["default"] = App;
 module.exports = exports["default"];
 
-},{"components/GameOver":195,"components/Logo":196,"components/ScoreHintContainer":197,"components/Timer":199,"components/board/Board":200,"models/game/Game":218,"react":192,"react-addons-css-transition-group":28}],195:[function(require,module,exports){
+},{"components/GameOver":195,"components/Logo":196,"components/ScoreHintContainer":197,"components/Timer":199,"components/board/Board":200,"models/game/Game":216,"models/master/LevelMaster":221,"react":192,"react-addons-css-transition-group":28}],195:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29313,51 +29319,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-var _modelsColor = require("models/Color");
-
-var _modelsColor2 = _interopRequireDefault(_modelsColor);
-
-var f = function f(r, g, b) {
-  return new _modelsColor2["default"](r * 0x10000 + g * 0x100 + b);
-};
-
-window.foo = {
-  red: f(255, 40, 0),
-  yellow: f(250, 245, 0),
-  green: f(53, 161, 107),
-  blue: f(0, 65, 255),
-  sky: f(102, 204, 255),
-  pink: f(255, 153, 160),
-  orange: f(255, 153, 0),
-  purple: f(153, 0, 121),
-  brown: f(102, 51, 0),
-
-  lightPink: f(255, 209, 209),
-  cream: f(255, 255, 153),
-  lightYellowGreen: f(203, 242, 102),
-  lightSky: f(180, 235, 250),
-  beige: f(237, 197, 143),
-  lightGreen: f(135, 231, 176),
-  lightPurple: f(199, 178, 222),
-
-  white: f(255, 255, 255),
-  lightGray: f(200, 200, 203),
-  gray: f(127, 135, 143),
-  black: f(0, 0, 0)
-};
-
-exports["default"] = window.foo;
-module.exports = exports["default"];
-
-},{"models/Color":208}],210:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -29410,7 +29371,7 @@ var Hint = (function () {
 exports["default"] = Hint;
 module.exports = exports["default"];
 
-},{"wu":193}],211:[function(require,module,exports){
+},{"wu":193}],210:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29463,7 +29424,7 @@ var Pool = (function () {
 exports["default"] = Pool;
 module.exports = exports["default"];
 
-},{"models/Rand":213}],212:[function(require,module,exports){
+},{"models/Rand":212}],211:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29500,7 +29461,7 @@ var PrefixStorage = (function () {
 exports["default"] = PrefixStorage;
 module.exports = exports["default"];
 
-},{}],213:[function(require,module,exports){
+},{}],212:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29528,7 +29489,7 @@ exports["default"] = (function () {
 
 module.exports = exports["default"];
 
-},{"wu":193}],214:[function(require,module,exports){
+},{"wu":193}],213:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29558,7 +29519,7 @@ var Tile = function Tile(bgColor) {
 exports["default"] = Tile;
 module.exports = exports["default"];
 
-},{}],215:[function(require,module,exports){
+},{}],214:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29624,61 +29585,7 @@ var TileContainer = function TileContainer(size, pool) {
 exports["default"] = TileContainer;
 module.exports = exports["default"];
 
-},{"wu":193}],216:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-var _modelsColorMaster = require("models/ColorMaster");
-
-var _modelsColorMaster2 = _interopRequireDefault(_modelsColorMaster);
-
-var _modelsColor = require("models/Color");
-
-var _modelsColor2 = _interopRequireDefault(_modelsColor);
-
-var _modelsTile = require("models/Tile");
-
-var _modelsTile2 = _interopRequireDefault(_modelsTile);
-
-var _wu = require("wu");
-
-var _wu2 = _interopRequireDefault(_wu);
-
-var cm = _modelsColorMaster2["default"];
-
-var colors3 = [cm.red, cm.yellow, cm.green, cm.blue, cm.sky, cm.pink, cm.orange, cm.purple, cm.brown, cm.lightYellowGreen, cm.lightSky, cm.beige, cm.lightPurple, cm.lightGray, cm.gray, cm.black];
-
-var colors4 = [cm.red, cm.yellow, cm.green, cm.blue, cm.sky, cm.pink, cm.orange, cm.purple, cm.brown, cm.beige, cm.lightGray, cm.gray, cm.black];
-
-var colors5 = [cm.red, cm.yellow, cm.green, cm.blue, cm.sky, cm.pink, cm.orange, cm.purple, cm.brown, cm.lightPink, cm.cream, cm.lightYellowGreen, cm.lightSky, cm.beige, cm.lightGreen, cm.lightPurple, cm.white, cm.lightGray, cm.gray, cm.black];
-
-var nums = "0123456789";
-var jap = "㌀㌁㌂㌃㌄㌅㌆㌇㌈㌉㌊㌋㌌㌍㌎㌏㌐㌑㌒㌓㌔㌕㌖㌗㌘㌙㌚㌛㌜㌝㌞㌟㌠㌡㌢㌣㌤㌥㌦㌧㌨㌩㌪㌫㌬㌭㌮㌯㌰㌱㌲㌳㌴㌵㌶㌷㌸㌹㌺㌻㌼㌽㌾㌿㍀㍁㍂㍃㍄㍅㍆㍇㍈㍉㍊㍋㍌㍍㍎㍏㍐㍑㍒㍓㍔㍕㍖㍗㍿";
-
-var f = function f(colors, texts, types) {
-  return Array.from((0, _wu2["default"])(colors).map(function (color) {
-    return (0, _wu2["default"])(texts).map(function (text) {
-      return (0, _wu2["default"])(types).map(function (type) {
-        var borderColor = color.isWhite() ? new _modelsColor2["default"](0) : color;
-        return new _modelsTile2["default"](color, borderColor, text, type);
-      });
-    });
-  }).flatten());
-};
-
-exports["default"] = {
-  3: [{ num: 3, level: 1, score: 0, tiles: f(colors3, [""], ["square"]) }, { num: 3, level: 2, score: 100, tiles: f(colors3, [""], ["square", "circle"]) }, { num: 3, level: 3, score: 200, tiles: f(colors3, nums, ["square", "circle"]) }],
-  4: [{ num: 4, level: 1, score: 0, tiles: f(colors4, [""], ["square", "circle"]) }, { num: 4, level: 2, score: 100, tiles: f(colors4, nums, ["square", "circle"]) }, { num: 4, level: 3, score: 200, tiles: f(colors4, jap, ["square", "circle"]) }],
-  5: [{ num: 5, level: 1, score: 0, tiles: f(colors5, [""], ["square", "circle"]) }, { num: 5, level: 2, score: 100, tiles: f(colors5, nums, ["square", "circle"]) }, { num: 5, level: 3, score: 200, tiles: f(colors5, jap, ["square", "circle"]) }]
-};
-module.exports = exports["default"];
-
-},{"models/Color":208,"models/ColorMaster":209,"models/Tile":214,"wu":193}],217:[function(require,module,exports){
+},{"wu":193}],215:[function(require,module,exports){
 "use strict";
 
 /*
@@ -29761,7 +29668,7 @@ var Timer = (function () {
 exports["default"] = Timer;
 module.exports = exports["default"];
 
-},{}],218:[function(require,module,exports){
+},{}],216:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29806,10 +29713,6 @@ var _modelsColor = require("models/Color");
 
 var _modelsColor2 = _interopRequireDefault(_modelsColor);
 
-var _modelsTileMaster = require("models/TileMaster");
-
-var _modelsTileMaster2 = _interopRequireDefault(_modelsTileMaster);
-
 var _modelsPool = require("models/Pool");
 
 var _modelsPool2 = _interopRequireDefault(_modelsPool);
@@ -29839,11 +29742,10 @@ var _modelsGameStatesFinished = require("models/game/states/Finished");
 var _modelsGameStatesFinished2 = _interopRequireDefault(_modelsGameStatesFinished);
 
 var Game = (function () {
-  function Game() {
+  function Game(size, lv) {
     _classCallCheck(this, Game);
 
     this.timer = new _modelsTimer2["default"](5000);
-    this.currentNum = 5;
 
     var storage = new _modelsPrefixStorage2["default"](localStorage, "touch_the_color/");
     this.score = new _modelsScoreScore2["default"](this.currentNum, storage);
@@ -29861,14 +29763,12 @@ var Game = (function () {
       events: [{ name: "start", from: "Init", to: "Started" }, { name: "timeup", from: "Started", to: "Finished" }, { name: "retry", from: "Finished", to: "Init" }],
       callbacks: {
         onInit: function onInit() {
-          self.currentNum = (self.currentNum + 1) % 3 + 3;
-          var num = self.currentNum;
-          self.score.reset(num);
+          self.score.reset(size);
           self.timer.reset();
           self.scoreTable = self._makeScoreTable();
-          self._tileUpdationRule = self._makeLevel(num);
-          self._hintContainer = self._makeHintContainer(num);
-          self._tileContainer = self._makeTileContainer(num, self._tileUpdationRule.shift().pool);
+          self._tileUpdationRule = self._makeTileUpdationRule(lv);
+          self._hintContainer = self._makeHintContainer(size);
+          self._tileContainer = self._makeTileContainer(size, self._tileUpdationRule.shift().pool);
           self.state = self.states.INIT;
         },
         onStarted: function onStarted() {
@@ -29890,14 +29790,12 @@ var Game = (function () {
       return new _modelsScoreScoreTable2["default"]([{ percent: 10, score: 10 }, { percent: 25, score: 5 }, { percent: 50, score: 3 }], { score: 1 });
     }
   }, {
-    key: "_makeLevel",
-    value: function _makeLevel(num) {
-      return _modelsTileMaster2["default"][num].map(function (lv) {
+    key: "_makeTileUpdationRule",
+    value: function _makeTileUpdationRule(lv) {
+      return lv.tileUpdationRule.map(function (rule) {
         return {
-          num: lv.num,
-          level: lv.level,
-          score: lv.score,
-          pool: new _modelsPool2["default"](lv.tiles)
+          score: rule.score,
+          pool: new _modelsPool2["default"](rule.tiles)
         };
       });
     }
@@ -29964,7 +29862,7 @@ var Game = (function () {
 exports["default"] = Game;
 module.exports = exports["default"];
 
-},{"javascript-state-machine":25,"models/Color":208,"models/Hint":210,"models/Pool":211,"models/PrefixStorage":212,"models/Rand":213,"models/Tile":214,"models/TileContainer":215,"models/TileMaster":216,"models/Timer":217,"models/game/states/Finished":219,"models/game/states/Init":220,"models/game/states/Started":221,"models/score/Score":222,"models/score/ScoreTable":223,"wu":193}],219:[function(require,module,exports){
+},{"javascript-state-machine":25,"models/Color":208,"models/Hint":209,"models/Pool":210,"models/PrefixStorage":211,"models/Rand":212,"models/Tile":213,"models/TileContainer":214,"models/Timer":215,"models/game/states/Finished":217,"models/game/states/Init":218,"models/game/states/Started":219,"models/score/Score":222,"models/score/ScoreTable":223,"wu":193}],217:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30009,7 +29907,7 @@ var Finished = (function () {
 exports["default"] = Finished;
 module.exports = exports["default"];
 
-},{}],220:[function(require,module,exports){
+},{}],218:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30059,7 +29957,7 @@ var Init = (function () {
 exports["default"] = Init;
 module.exports = exports["default"];
 
-},{}],221:[function(require,module,exports){
+},{}],219:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30113,7 +30011,110 @@ var Started = (function () {
 exports["default"] = Started;
 module.exports = exports["default"];
 
-},{}],222:[function(require,module,exports){
+},{}],220:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+var _modelsColor = require("models/Color");
+
+var _modelsColor2 = _interopRequireDefault(_modelsColor);
+
+var f = function f(r, g, b) {
+  return new _modelsColor2["default"](r * 0x10000 + g * 0x100 + b);
+};
+
+exports["default"] = {
+  red: f(255, 40, 0),
+  yellow: f(250, 245, 0),
+  green: f(53, 161, 107),
+  blue: f(0, 65, 255),
+  sky: f(102, 204, 255),
+  pink: f(255, 153, 160),
+  orange: f(255, 153, 0),
+  purple: f(153, 0, 121),
+  brown: f(102, 51, 0),
+
+  lightPink: f(255, 209, 209),
+  cream: f(255, 255, 153),
+  lightYellowGreen: f(203, 242, 102),
+  lightSky: f(180, 235, 250),
+  beige: f(237, 197, 143),
+  lightGreen: f(135, 231, 176),
+  lightPurple: f(199, 178, 222),
+
+  white: f(255, 255, 255),
+  lightGray: f(200, 200, 203),
+  gray: f(127, 135, 143),
+  black: f(0, 0, 0)
+};
+module.exports = exports["default"];
+
+},{"models/Color":208}],221:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+var _modelsMasterColorMaster = require("models/master/ColorMaster");
+
+var _modelsMasterColorMaster2 = _interopRequireDefault(_modelsMasterColorMaster);
+
+var _modelsColor = require("models/Color");
+
+var _modelsColor2 = _interopRequireDefault(_modelsColor);
+
+var _modelsTile = require("models/Tile");
+
+var _modelsTile2 = _interopRequireDefault(_modelsTile);
+
+var _wu = require("wu");
+
+var _wu2 = _interopRequireDefault(_wu);
+
+var cm = _modelsMasterColorMaster2["default"];
+
+var colors3 = [cm.red, cm.yellow, cm.green, cm.blue, cm.sky, cm.pink, cm.orange, cm.purple, cm.brown, cm.lightYellowGreen, cm.lightSky, cm.beige, cm.lightPurple, cm.lightGray, cm.gray, cm.black];
+
+var colors4 = [cm.red, cm.yellow, cm.green, cm.blue, cm.sky, cm.pink, cm.orange, cm.purple, cm.brown, cm.beige, cm.lightGray, cm.gray, cm.black];
+
+var colors5 = [cm.red, cm.yellow, cm.green, cm.blue, cm.sky, cm.pink, cm.orange, cm.purple, cm.brown, cm.lightPink, cm.cream, cm.lightYellowGreen, cm.lightSky, cm.beige, cm.lightGreen, cm.lightPurple, cm.white, cm.lightGray, cm.gray, cm.black];
+
+var nums = "0123456789";
+var jap = "㌀㌁㌂㌃㌄㌅㌆㌇㌈㌉㌊㌋㌌㌍㌎㌏㌐㌑㌒㌓㌔㌕㌖㌗㌘㌙㌚㌛㌜㌝㌞㌟㌠㌡㌢㌣㌤㌥㌦㌧㌨㌩㌪㌫㌬㌭㌮㌯㌰㌱㌲㌳㌴㌵㌶㌷㌸㌹㌺㌻㌼㌽㌾㌿㍀㍁㍂㍃㍄㍅㍆㍇㍈㍉㍊㍋㍌㍍㍎㍏㍐㍑㍒㍓㍔㍕㍖㍗㍿";
+
+var f = function f(colors, texts, types) {
+  return Array.from((0, _wu2["default"])(colors).map(function (color) {
+    return (0, _wu2["default"])(texts).map(function (text) {
+      return (0, _wu2["default"])(types).map(function (type) {
+        var borderColor = color.isWhite() ? new _modelsColor2["default"](0) : color;
+        return new _modelsTile2["default"](color, borderColor, text, type);
+      });
+    });
+  }).flatten());
+};
+
+var levels = {
+  3: [f(colors3, [""], ["square"]), f(colors3, [""], ["square", "circle"]), f(colors3, nums, ["square", "circle"]), f(colors3, jap, ["square", "circle"])],
+  4: [f(colors4, [""], ["square", "circle"]), f(colors4, nums, ["square", "circle"]), f(colors4, jap, ["square", "circle"])],
+  5: [f(colors5, [""], ["square", "circle"]), f(colors5, nums, ["square", "circle"]), f(colors5, jap, ["square", "circle"])]
+};
+
+exports["default"] = {
+  3: [{ level: 1, tileUpdationRule: [{ score: 0, tiles: levels[3][0] }, { score: 1000, tiles: levels[3][1] }, { score: 3000, tiles: levels[3][2] }, { score: 6000, tiles: levels[3][3] }] }],
+  4: [{ level: 1, tileUpdationRule: [{ score: 0, tiles: levels[4][0] }, { score: 1000, tiles: levels[4][1] }, { score: 3000, tiles: levels[4][2] }] }],
+  5: [{ level: 1, tileUpdationRule: [{ score: 0, tiles: levels[5][0] }, { score: 1000, tiles: levels[5][1] }, { score: 3000, tiles: levels[5][2] }] }]
+};
+module.exports = exports["default"];
+
+},{"models/Color":208,"models/Tile":213,"models/master/ColorMaster":220,"wu":193}],222:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
