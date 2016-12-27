@@ -29828,7 +29828,7 @@ var Game = (function () {
     this.currentNum = 5;
 
     var storage = new _modelsPrefixStorage2["default"](localStorage, "touch_the_color/");
-    this.score = new _modelsScoreScore2["default"](storage);
+    this.score = new _modelsScoreScore2["default"](this.currentNum, storage);
 
     this.states = {
       INIT: new _modelsGameStatesInit2["default"](this),
@@ -29845,7 +29845,7 @@ var Game = (function () {
         onInit: function onInit() {
           self.currentNum = (self.currentNum + 1) % 3 + 3;
           var num = self.currentNum;
-          self.score.reset();
+          self.score.reset(num);
           self.timer.reset();
           self.scoreTable = self._makeScoreTable();
           self._tileUpdationRule = self._makeLevel(num);
@@ -30133,19 +30133,23 @@ var bestIcons = {
 };
 
 var Score = (function () {
-  function Score(storage) {
+  function Score(num, storage) {
     _classCallCheck(this, Score);
 
-    var best = 1 * storage.getItem("best");
     this._storage = storage;
+    this._num = num;
     this.current = new _modelsScoreScoreValue2["default"](0, scoreIcons.table, scoreIcons.last);
-    this.best = new _modelsScoreScoreValue2["default"](best, bestIcons.table, bestIcons.last);
+    this.best = new _modelsScoreScoreValue2["default"](0, bestIcons.table, bestIcons.last);
+    this.reset(num);
   }
 
   _createClass(Score, [{
     key: "reset",
-    value: function reset() {
+    value: function reset(num) {
+      this._num = num;
       this.current.update(0);
+      var best = 1 * this._storage.getItem("best-" + num);
+      this.best.update(best);
     }
   }, {
     key: "count",
@@ -30155,7 +30159,7 @@ var Score = (function () {
       this.current.update(this.current.value + n);
       if (this.best.value < this.current.value) {
         this.best.update(this.current.value);
-        this._storage.setItem("best", this.current.value);
+        this._storage.setItem("best-" + this._num, this.current.value);
       }
     }
   }]);
