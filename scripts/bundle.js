@@ -29551,6 +29551,7 @@ var Tile = function Tile(bgColor) {
     this.textColor = bgColor.textColor();
     this.className = klass;
     this.key = key;
+    this.hash = "" + bgColor + borderColor + text + klass;
   }).apply(this, arguments);
 };
 
@@ -29581,8 +29582,11 @@ var TileContainer = function TileContainer(size, pool) {
     pool = newPool;
   };
 
+  var tilesSet = new Set();
   var tiles = Array.from(_wu2["default"].count().take(size).map(function () {
-    return pool.borrow();
+    var poolItem = pool.borrow();
+    tilesSet.add(poolItem.item.hash);
+    return poolItem;
   }));
 
   this.trySelect = function (i) {
@@ -29591,8 +29595,22 @@ var TileContainer = function TileContainer(size, pool) {
 
   this.select = function (i) {
     if (!_this.trySelect(i)) return false;
+    var conflicts = [];
+    var poolItem = pool.borrow();
+    while (tilesSet.has(poolItem.item.hash)) {
+      conflicts.push(poolItem);
+      poolItem = pool.borrow();
+    }
+
+    conflicts.forEach(function (poolItem) {
+      poolItem.backToPool();
+    });
+
     var oldItem = tiles[i];
-    tiles[i] = pool.borrow();
+    tiles[i] = poolItem;
+    tilesSet["delete"](oldItem.item.hash);
+    tilesSet.add(poolItem.item.hash);
+
     oldItem.backToPool();
     return true;
   };
@@ -29640,7 +29658,7 @@ var colors4 = [cm.red, cm.yellow, cm.green, cm.blue, cm.sky, cm.pink, cm.orange,
 var colors5 = [cm.red, cm.yellow, cm.green, cm.blue, cm.sky, cm.pink, cm.orange, cm.purple, cm.brown, cm.lightPink, cm.cream, cm.lightYellowGreen, cm.lightSky, cm.beige, cm.lightGreen, cm.lightPurple, cm.white, cm.lightGray, cm.gray, cm.black];
 
 var nums = "0123456789";
-var uni = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+var jap = "㌀㌁㌂㌃㌄㌅㌆㌇㌈㌉㌊㌋㌌㌍㌎㌏㌐㌑㌒㌓㌔㌕㌖㌗㌘㌙㌚㌛㌜㌝㌞㌟㌠㌡㌢㌣㌤㌥㌦㌧㌨㌩㌪㌫㌬㌭㌮㌯㌰㌱㌲㌳㌴㌵㌶㌷㌸㌹㌺㌻㌼㌽㌾㌿㍀㍁㍂㍃㍄㍅㍆㍇㍈㍉㍊㍋㍌㍍㍎㍏㍐㍑㍒㍓㍔㍕㍖㍗㍿";
 
 var f = function f(colors, texts, types) {
   return Array.from((0, _wu2["default"])(colors).map(function (color) {
@@ -29654,9 +29672,9 @@ var f = function f(colors, texts, types) {
 };
 
 exports["default"] = {
-  3: [{ num: 3, level: 1, score: 0, tiles: f(colors3, [""], ["square"]) }, { num: 3, level: 2, score: 1000, tiles: f(colors3, nums, ["square"]) }, { num: 3, level: 3, score: 5000, tiles: f(colors3, uni, ["square"]) }],
-  4: [{ num: 4, level: 1, score: 0, tiles: f(colors4, [""], ["square", "circle"]) }, { num: 4, level: 2, score: 1000, tiles: f(colors4, nums, ["square", "circle"]) }, { num: 4, level: 3, score: 5000, tiles: f(colors4, uni, ["square", "circle"]) }],
-  5: [{ num: 5, level: 1, score: 0, tiles: f(colors5, [""], ["square", "circle"]) }, { num: 5, level: 2, score: 1000, tiles: f(colors5, nums, ["square", "circle"]) }, { num: 5, level: 3, score: 5000, tiles: f(colors5, uni, ["square", "circle"]) }]
+  3: [{ num: 3, level: 1, score: 0, tiles: f(colors3, [""], ["square"]) }, { num: 3, level: 2, score: 100, tiles: f(colors3, [""], ["square", "circle"]) }, { num: 3, level: 3, score: 200, tiles: f(colors3, nums, ["square", "circle"]) }],
+  4: [{ num: 4, level: 1, score: 0, tiles: f(colors4, [""], ["square", "circle"]) }, { num: 4, level: 2, score: 100, tiles: f(colors4, nums, ["square", "circle"]) }, { num: 4, level: 3, score: 200, tiles: f(colors4, jap, ["square", "circle"]) }],
+  5: [{ num: 5, level: 1, score: 0, tiles: f(colors5, [""], ["square", "circle"]) }, { num: 5, level: 2, score: 100, tiles: f(colors5, nums, ["square", "circle"]) }, { num: 5, level: 3, score: 200, tiles: f(colors5, jap, ["square", "circle"]) }]
 };
 module.exports = exports["default"];
 

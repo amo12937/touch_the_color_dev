@@ -115,7 +115,7 @@ html, body {
   float: left;
   position: relative;
   margin: 1vmin;
-  font-size: 2vmin; }
+  font-size: 12.5vmin; }
   .board_cell.board_cell-3 {
     width: 25vmin;
     height: 25vmin; }
