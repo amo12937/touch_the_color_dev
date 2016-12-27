@@ -114,17 +114,19 @@ html, body {
   height: 14.2vmin;
   float: left;
   position: relative;
-  margin: 1vmin;
-  font-size: 12.5vmin; }
+  margin: 1vmin; }
   .board_cell.board_cell-3 {
     width: 25vmin;
-    height: 25vmin; }
+    height: 25vmin;
+    font-size: 12.5vmin; }
   .board_cell.board_cell-4 {
     width: 18.25vmin;
-    height: 18.25vmin; }
+    height: 18.25vmin;
+    font-size: 9.375vmin; }
   .board_cell.board_cell-5 {
     width: 14.2vmin;
-    height: 14.2vmin; }
+    height: 14.2vmin;
+    font-size: 7.5vmin; }
 
 .board_item-appear {
   -webkit-transform: scale(0.5);
