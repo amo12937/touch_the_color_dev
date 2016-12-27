@@ -46,6 +46,7 @@ table {
   border-spacing: 0; }
 
 /* layout */
+/* font size */
 html, body {
   overflow: hidden;
   font-family: ".Hiragino Kaku Gothic Interface"; }
@@ -107,7 +108,8 @@ html, body {
   height: 25vmin;
   float: left;
   position: relative;
-  margin: 1vmin; }
+  margin: 1vmin;
+  font-size: 12.5vmin; }
 
 .board_item-appear {
   -webkit-transform: scale(0.5);
@@ -321,12 +323,14 @@ html, body {
   transition: all 400ms;
   width: 8vmin;
   height: 8vmin;
-  margin: 7vmin 1vmin 1vmin; }
+  margin: 7vmin 1vmin 1vmin;
+  font-size: 4vmin; }
   .hint.hint-0 {
     width: 14vmin;
     height: 14vmin;
     float: left;
     margin: 1vmin;
+    font-size: 7vmin;
     position: absolute;
     -webkit-transform: translate(0, 0);
             transform: translate(0, 0); }
@@ -418,7 +422,6 @@ html, body {
        -moz-user-select: none;
         -ms-user-select: none;
             user-select: none;
-    font-size: xx-large;
     border-radius: calc(20% - 0.5vmin); }
 
 .score_hint_container {
@@ -439,7 +442,8 @@ html, body {
 .score {
   height: 7vmin;
   margin: 0 3vmin;
-  position: relative; }
+  position: relative;
+  font-size: 4vmin; }
   .score .score_icon {
     position: absolute;
     top: 0;
@@ -454,8 +458,7 @@ html, body {
             align-items: center;
     -webkit-box-pack: start;
         -ms-flex-pack: start;
-            justify-content: flex-start;
-    font-size: x-large; }
+            justify-content: flex-start; }
   .score .score_value {
     position: absolute;
     top: 0;
@@ -470,8 +473,7 @@ html, body {
             align-items: center;
     -webkit-box-pack: end;
         -ms-flex-pack: end;
-            justify-content: flex-end;
-    font-size: x-large; }
+            justify-content: flex-end; }
 
 .score_animation-appear {
   -webkit-transform: scale(2);
@@ -551,4 +553,4 @@ html, body {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  font-size: x-large; }
+  font-size: 4vmin; }
