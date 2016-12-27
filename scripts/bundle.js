@@ -28324,7 +28324,8 @@ var App = (function (_React$Component) {
         hints: this.game.hints(),
         tiles: this.game.tiles(),
         appeals: this.game.appeals(),
-        failed: {}
+        failed: {},
+        num: this.game.currentNum
       };
     }
   }, {
@@ -28348,8 +28349,8 @@ var App = (function (_React$Component) {
             onTimeup: this.handleTimeup
           }),
           _react2["default"].createElement(_componentsBoardBoard2["default"], {
-            num_of_rows: 3,
-            num_of_cells: 3,
+            num_of_rows: this.state.num,
+            num_of_cells: this.state.num,
             tiles: this.state.tiles,
             appeals: this.state.appeals,
             failed: this.state.failed,
@@ -28374,7 +28375,7 @@ var App = (function (_React$Component) {
 exports["default"] = App;
 module.exports = exports["default"];
 
-},{"components/GameOver":195,"components/Logo":196,"components/ScoreHintContainer":197,"components/Timer":199,"components/board/Board":200,"models/game/Game":217,"react":192,"react-addons-css-transition-group":28}],195:[function(require,module,exports){
+},{"components/GameOver":195,"components/Logo":196,"components/ScoreHintContainer":197,"components/Timer":199,"components/board/Board":200,"models/game/Game":218,"react":192,"react-addons-css-transition-group":28}],195:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28582,7 +28583,7 @@ var Tile = (function (_React$Component) {
       var tile = this.props.tile;
       return _react2["default"].createElement(
         "div",
-        { className: "tile", style: { backgroundColor: tile.borderColor } },
+        { className: "tile " + tile.className, style: { backgroundColor: tile.borderColor } },
         _react2["default"].createElement(
           "div",
           { className: "tile_content", style: {
@@ -28847,7 +28848,7 @@ var BoardCell = (function (_React$Component) {
 
       var tile = this.props.tile;
 
-      var classes = ["board_cell"];
+      var classes = ["board_cell", "board_cell-" + this.props.num_of_cells];
       if (this.props.appeal) classes.push("board_cell_appeal");
 
       return _react2["default"].createElement(
@@ -28926,13 +28927,14 @@ var BoardRow = (function (_React$Component) {
           tile: this.props.tiles[cell_id],
           appeal: this.props.appeals[cell_id] || false,
           failed: this.props.failed[cell_id] || false,
-          onClick: this.props.onClick
+          onClick: this.props.onClick,
+          num_of_cells: this.props.num_of_cells
         }));
       }
 
       return _react2["default"].createElement(
         "div",
-        { className: "board_row" },
+        { className: "board_row board_row-" + this.props.num_of_cells },
         cells
       );
     }
@@ -29248,7 +29250,7 @@ document.addEventListener("touchmove", function (e) {
   e.preventDefault();
 });
 
-},{"./components/App":194,"./prevent_zoom":224,"react":192,"react-dom":30}],208:[function(require,module,exports){
+},{"./components/App":194,"./prevent_zoom":225,"react":192,"react-dom":30}],208:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29291,6 +29293,11 @@ var Color = (function () {
     value: function textColor() {
       return this.isBright() ? new Color(0) : new Color(0xffffff);
     }
+  }, {
+    key: "isWhite",
+    value: function isWhite() {
+      return this._r == 0xff && this._g == 0xff && this._b == 0xff;
+    }
   }]);
 
   return Color;
@@ -29312,7 +29319,36 @@ var _modelsColor = require("models/Color");
 
 var _modelsColor2 = _interopRequireDefault(_modelsColor);
 
-exports["default"] = [[new _modelsColor2["default"](0x3a3042), new _modelsColor2["default"](0x49392c), new _modelsColor2["default"](0x3b28cc), new _modelsColor2["default"](0x8c271e), new _modelsColor2["default"](0xf40000), new _modelsColor2["default"](0x8332ac), new _modelsColor2["default"](0x77625c), new _modelsColor2["default"](0xff784f), new _modelsColor2["default"](0xdb9d47), new _modelsColor2["default"](0xe086d3), new _modelsColor2["default"](0x1be7ff), new _modelsColor2["default"](0xffb800), new _modelsColor2["default"](0x6eeb83), new _modelsColor2["default"](0xadd7f6), new _modelsColor2["default"](0xe4ff1a), new _modelsColor2["default"](0xffe19c), new _modelsColor2["default"](0xedffd9)], [new _modelsColor2["default"](0x98d2eb), new _modelsColor2["default"](0xe1f2fe), new _modelsColor2["default"](0xb2b1cf), new _modelsColor2["default"](0xaba194), new _modelsColor2["default"](0xcfcbca), new _modelsColor2["default"](0xd8ddde), new _modelsColor2["default"](0xd9f7fa), new _modelsColor2["default"](0x2f4b26), new _modelsColor2["default"](0x3e885b), new _modelsColor2["default"](0x85bda6), new _modelsColor2["default"](0xbedcfe), new _modelsColor2["default"](0xc0d7bb), new _modelsColor2["default"](0xbad1cd), new _modelsColor2["default"](0xf2d1c9), new _modelsColor2["default"](0x462749), new _modelsColor2["default"](0x87bfff), new _modelsColor2["default"](0x3f8efc), new _modelsColor2["default"](0x2667ff), new _modelsColor2["default"](0xed3f2f), new _modelsColor2["default"](0xf4796b), new _modelsColor2["default"](0xf4998d)]];
+var f = function f(r, g, b) {
+  return new _modelsColor2["default"](r * 0x10000 + g * 0x100 + b);
+};
+
+window.foo = {
+  red: f(255, 40, 0),
+  yellow: f(250, 245, 0),
+  green: f(53, 161, 107),
+  blue: f(0, 65, 255),
+  sky: f(102, 204, 255),
+  pink: f(255, 153, 160),
+  orange: f(255, 153, 0),
+  purple: f(153, 0, 121),
+  brown: f(102, 51, 0),
+
+  lightPink: f(255, 209, 209),
+  cream: f(255, 255, 153),
+  lightYellowGreen: f(203, 242, 102),
+  lightSky: f(180, 235, 250),
+  beige: f(237, 197, 143),
+  lightGreen: f(135, 231, 176),
+  lightPurple: f(199, 178, 222),
+
+  white: f(255, 255, 255),
+  lightGray: f(200, 200, 203),
+  gray: f(127, 135, 143),
+  black: f(0, 0, 0)
+};
+
+exports["default"] = window.foo;
 module.exports = exports["default"];
 
 },{"models/Color":208}],210:[function(require,module,exports){
@@ -29504,7 +29540,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Tile = function Tile(bgColor) {
   var borderColor = arguments.length <= 1 || arguments[1] === undefined ? bgColor : arguments[1];
   var text = arguments.length <= 2 || arguments[2] === undefined ? "" : arguments[2];
-  var key = arguments.length <= 3 || arguments[3] === undefined ? Math.random() : arguments[3];
+  var klass = arguments.length <= 3 || arguments[3] === undefined ? "square" : arguments[3];
+  var key = arguments.length <= 4 || arguments[4] === undefined ? Math.random() : arguments[4];
   return (function () {
     _classCallCheck(this, Tile);
 
@@ -29512,6 +29549,7 @@ var Tile = function Tile(bgColor) {
     this.borderColor = borderColor;
     this.text = text;
     this.textColor = bgColor.textColor();
+    this.className = klass;
     this.key = key;
   }).apply(this, arguments);
 };
@@ -29569,6 +29607,60 @@ exports["default"] = TileContainer;
 module.exports = exports["default"];
 
 },{"wu":193}],216:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+var _modelsColorMaster = require("models/ColorMaster");
+
+var _modelsColorMaster2 = _interopRequireDefault(_modelsColorMaster);
+
+var _modelsColor = require("models/Color");
+
+var _modelsColor2 = _interopRequireDefault(_modelsColor);
+
+var _modelsTile = require("models/Tile");
+
+var _modelsTile2 = _interopRequireDefault(_modelsTile);
+
+var _wu = require("wu");
+
+var _wu2 = _interopRequireDefault(_wu);
+
+var cm = _modelsColorMaster2["default"];
+
+var colors3 = [cm.red, cm.yellow, cm.green, cm.blue, cm.sky, cm.pink, cm.orange, cm.purple, cm.brown, cm.lightYellowGreen, cm.lightSky, cm.beige, cm.lightPurple, cm.lightGray, cm.gray, cm.black];
+
+var colors4 = [cm.red, cm.yellow, cm.green, cm.blue, cm.sky, cm.pink, cm.orange, cm.purple, cm.brown, cm.beige, cm.lightGray, cm.gray, cm.black];
+
+var colors5 = [cm.red, cm.yellow, cm.green, cm.blue, cm.sky, cm.pink, cm.orange, cm.purple, cm.brown, cm.lightPink, cm.cream, cm.lightYellowGreen, cm.lightSky, cm.beige, cm.lightGreen, cm.lightPurple, cm.white, cm.lightGray, cm.gray, cm.black];
+
+var nums = "0123456789";
+var uni = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+var f = function f(colors, texts, types) {
+  return Array.from((0, _wu2["default"])(colors).map(function (color) {
+    return (0, _wu2["default"])(texts).map(function (text) {
+      return (0, _wu2["default"])(types).map(function (type) {
+        var borderColor = color.isWhite() ? new _modelsColor2["default"](0) : color;
+        return new _modelsTile2["default"](color, borderColor, text, type);
+      });
+    });
+  }).flatten());
+};
+
+exports["default"] = {
+  3: [{ num: 3, level: 1, score: 0, tiles: f(colors3, [""], ["square"]) }, { num: 3, level: 2, score: 1000, tiles: f(colors3, nums, ["square"]) }, { num: 3, level: 3, score: 5000, tiles: f(colors3, uni, ["square"]) }],
+  4: [{ num: 4, level: 1, score: 0, tiles: f(colors4, [""], ["square", "circle"]) }, { num: 4, level: 2, score: 1000, tiles: f(colors4, nums, ["square", "circle"]) }, { num: 4, level: 3, score: 5000, tiles: f(colors4, uni, ["square", "circle"]) }],
+  5: [{ num: 5, level: 1, score: 0, tiles: f(colors5, [""], ["square", "circle"]) }, { num: 5, level: 2, score: 1000, tiles: f(colors5, nums, ["square", "circle"]) }, { num: 5, level: 3, score: 5000, tiles: f(colors5, uni, ["square", "circle"]) }]
+};
+module.exports = exports["default"];
+
+},{"models/Color":208,"models/ColorMaster":209,"models/Tile":214,"wu":193}],217:[function(require,module,exports){
 "use strict";
 
 /*
@@ -29651,7 +29743,7 @@ var Timer = (function () {
 exports["default"] = Timer;
 module.exports = exports["default"];
 
-},{}],217:[function(require,module,exports){
+},{}],218:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29696,9 +29788,9 @@ var _modelsColor = require("models/Color");
 
 var _modelsColor2 = _interopRequireDefault(_modelsColor);
 
-var _modelsColorMaster = require("models/ColorMaster");
+var _modelsTileMaster = require("models/TileMaster");
 
-var _modelsColorMaster2 = _interopRequireDefault(_modelsColorMaster);
+var _modelsTileMaster2 = _interopRequireDefault(_modelsTileMaster);
 
 var _modelsPool = require("models/Pool");
 
@@ -29733,6 +29825,7 @@ var Game = (function () {
     _classCallCheck(this, Game);
 
     this.timer = new _modelsTimer2["default"](5000);
+    this.currentNum = 5;
 
     var storage = new _modelsPrefixStorage2["default"](localStorage, "touch_the_color/");
     this.score = new _modelsScoreScore2["default"](storage);
@@ -29750,12 +29843,14 @@ var Game = (function () {
       events: [{ name: "start", from: "Init", to: "Started" }, { name: "timeup", from: "Started", to: "Finished" }, { name: "retry", from: "Finished", to: "Init" }],
       callbacks: {
         onInit: function onInit() {
+          self.currentNum = (self.currentNum + 1) % 3 + 3;
+          var num = self.currentNum;
           self.score.reset();
           self.timer.reset();
           self.scoreTable = self._makeScoreTable();
-          self._tileUpdationRule = self._makeTileUpdationRule();
-          self._hintContainer = self._makeHintContainer();
-          self._tileContainer = self._makeTileContainer(self._tileUpdationRule.shift().pool);
+          self._tileUpdationRule = self._makeLevel(num);
+          self._hintContainer = self._makeHintContainer(num);
+          self._tileContainer = self._makeTileContainer(num, self._tileUpdationRule.shift().pool);
           self.state = self.states.INIT;
         },
         onStarted: function onStarted() {
@@ -29777,31 +29872,26 @@ var Game = (function () {
       return new _modelsScoreScoreTable2["default"]([{ percent: 10, score: 10 }, { percent: 25, score: 5 }, { percent: 50, score: 3 }], { score: 1 });
     }
   }, {
-    key: "_makeTileUpdationRule",
-    value: function _makeTileUpdationRule() {
-      return [{
-        score: 0,
-        pool: new _modelsPool2["default"](_modelsColorMaster2["default"][0].map(function (color) {
-          return new _modelsTile2["default"](color);
-        }))
-      }, {
-        score: 1000,
-        pool: new _modelsPool2["default"]([].concat.apply([], _modelsColorMaster2["default"][1].map(function (color) {
-          return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(function (i) {
-            return new _modelsTile2["default"](color, color, i);
-          });
-        })))
-      }];
+    key: "_makeLevel",
+    value: function _makeLevel(num) {
+      return _modelsTileMaster2["default"][num].map(function (lv) {
+        return {
+          num: lv.num,
+          level: lv.level,
+          score: lv.score,
+          pool: new _modelsPool2["default"](lv.tiles)
+        };
+      });
     }
   }, {
     key: "_makeHintContainer",
-    value: function _makeHintContainer() {
-      return new _modelsHint2["default"](9, 4, _modelsRand2["default"].randIterator);
+    value: function _makeHintContainer(num) {
+      return new _modelsHint2["default"](num * num, 4, _modelsRand2["default"].randIterator);
     }
   }, {
     key: "_makeTileContainer",
-    value: function _makeTileContainer(pool) {
-      return new _modelsTileContainer2["default"](9, pool);
+    value: function _makeTileContainer(num, pool) {
+      return new _modelsTileContainer2["default"](num * num, pool);
     }
   }, {
     key: "retry",
@@ -29856,7 +29946,7 @@ var Game = (function () {
 exports["default"] = Game;
 module.exports = exports["default"];
 
-},{"javascript-state-machine":25,"models/Color":208,"models/ColorMaster":209,"models/Hint":210,"models/Pool":211,"models/PrefixStorage":212,"models/Rand":213,"models/Tile":214,"models/TileContainer":215,"models/Timer":216,"models/game/states/Finished":218,"models/game/states/Init":219,"models/game/states/Started":220,"models/score/Score":221,"models/score/ScoreTable":222,"wu":193}],218:[function(require,module,exports){
+},{"javascript-state-machine":25,"models/Color":208,"models/Hint":210,"models/Pool":211,"models/PrefixStorage":212,"models/Rand":213,"models/Tile":214,"models/TileContainer":215,"models/TileMaster":216,"models/Timer":217,"models/game/states/Finished":219,"models/game/states/Init":220,"models/game/states/Started":221,"models/score/Score":222,"models/score/ScoreTable":223,"wu":193}],219:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29901,7 +29991,7 @@ var Finished = (function () {
 exports["default"] = Finished;
 module.exports = exports["default"];
 
-},{}],219:[function(require,module,exports){
+},{}],220:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29951,7 +30041,7 @@ var Init = (function () {
 exports["default"] = Init;
 module.exports = exports["default"];
 
-},{}],220:[function(require,module,exports){
+},{}],221:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30005,7 +30095,7 @@ var Started = (function () {
 exports["default"] = Started;
 module.exports = exports["default"];
 
-},{}],221:[function(require,module,exports){
+},{}],222:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30076,7 +30166,7 @@ var Score = (function () {
 exports["default"] = Score;
 module.exports = exports["default"];
 
-},{"models/score/ScoreValue":223}],222:[function(require,module,exports){
+},{"models/score/ScoreValue":224}],223:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30110,7 +30200,7 @@ var ScoreTable = (function () {
 exports["default"] = ScoreTable;
 module.exports = exports["default"];
 
-},{}],223:[function(require,module,exports){
+},{}],224:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30155,7 +30245,7 @@ var ScoreValue = (function () {
 exports["default"] = ScoreValue;
 module.exports = exports["default"];
 
-},{}],224:[function(require,module,exports){
+},{}],225:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
