@@ -30209,8 +30209,11 @@ var colors4 = [cm.red, cm.yellow, cm.green, cm.blue, cm.sky, cm.pink, cm.orange,
 
 var colors5 = [cm.red, cm.yellow, cm.green, cm.blue, cm.sky, cm.pink, cm.orange, cm.purple, cm.brown, cm.lightPink, cm.cream, cm.lightYellowGreen, cm.lightSky, cm.beige, cm.lightGreen, cm.lightPurple, cm.white, cm.lightGray, cm.gray, cm.black];
 
+var colorsGray = [cm.black, cm.white];
+
 var nums = "0123456789";
 var jap = "㌀㌁㌂㌃㌄㌅㌆㌇㌈㌉㌊㌋㌌㌍㌎㌏㌐㌑㌒㌓㌔㌕㌖㌗㌘㌙㌚㌛㌜㌝㌞㌟㌠㌡㌢㌣㌤㌥㌦㌧㌨㌩㌪㌫㌬㌭㌮㌯㌰㌱㌲㌳㌴㌵㌶㌷㌸㌹㌺㌻㌼㌽㌾㌿㍀㍁㍂㍃㍄㍅㍆㍇㍈㍉㍊㍋㍌㍍㍎㍏㍐㍑㍒㍓㍔㍕㍖㍗㍿";
+var yi = "ꀀꀁꀂꀃꀄꀅꀆꀇꀈꀉꀊꀋꀌꀍꀎꀏꀐꀑꀒꀓꀔꀕꀖꀗꀘꀙꀚꀛꀜꀝꀞꀟꀠꀡꀢꀣꀤꀥꀦꀧꀨꀩꀪꀫꀬꀭꀮꀯꀰꀱꀲꀳꀴꀵꀶꀷꀸꀹꀺꀻꀼꀽꀾꀿꁀꁁꁂꁃꁄꁅꁆꁇꁈꁉꁊꁋꁌꁍꁎꁏꁐꁑꁒꁓꁔꁕꁖꁗꁘꁙꁚꁛꁜꁝꁞꁟꁠꁡꁢꁣꁤꁥꁦꁧꁨꁩꁪꁫꁬꁭꁮꁯꁰꁱꁲꁳꁴꁵꁶꁷꁸꁹꁺꁻꁼꁽꁾꁿꂀꂁꂂꂃꂄꂅꂆꂇꂈꂉꂊꂋꂌꂍꂎꂏꂐꂑꂒꂓꂔꂕꂖꂗꂘꂙꂚꂛꂜꂝꂞꂟꂠꂡꂢꂣꂤꂥꂦꂧꂨꂩꂪꂫꂬꂭꂮꂯꂰꂱꂲꂳꂴꂵꂶꂷꂸꂹꂺꂻꂼꂽꂾꂿꃀꃁꃂꃃꃄꃅꃆꃇꃈꃉꃊꃋꃌꃍꃎꃏꃐꃑꃒꃓꃔꃕꃖꃗꃘꃙꃚꃛꃜꃝꃞꃟꃠꃡꃢꃣꃤꃥꃦꃧꃨꃩꃪꃫꃬꃭꃮꃯꃰꃱꃲꃳꃴꃵꃶꃷꃸꃹꃺꃻꃼꃽꃾꃿꄀꄁꄂꄃꄄꄅꄆꄇꄈꄉꄊꄋꄌꄍꄎꄏꄐꄑꄒꄓꄔꄕꄖꄗꄘꄙꄚꄛꄜꄝꄞꄟꄠꄡꄢꄣꄤꄥꄦꄧꄨꄩꄪꄫꄬꄭꄮꄯꄰꄱꄲꄳꄴꄵꄶꄷꄸꄹꄺꄻꄼꄽꄾꄿꅀꅁꅂꅃꅄꅅꅆꅇꅈꅉꅊꅋꅌꅍꅎꅏꅐꅑꅒꅓꅔꅕꅖꅗꅘꅙꅚꅛꅜꅝꅞꅟꅠꅡꅢꅣꅤꅥꅦꅧꅨꅩꅪꅫꅬꅭꅮꅯꅰꅱꅲꅳꅴꅵꅶꅷꅸꅹꅺꅻꅼꅽꅾꅿꆀꆁꆂꆃꆄꆅꆆꆇꆈꆉꆊꆋꆌꆍꆎꆏꆐꆑꆒꆓꆔꆕꆖꆗꆘꆙꆚꆛꆜꆝꆞꆟꆠꆡꆢꆣꆤꆥꆦꆧꆨꆩꆪꆫꆬꆭꆮꆯꆰꆱꆲꆳꆴꆵꆶꆷꆸꆹꆺꆻꆼꆽꆾꆿꇀꇁꇂꇃꇄꇅꇆꇇꇈꇉꇊꇋꇌꇍꇎꇏꇐꇑꇒꇓꇔꇕꇖꇗꇘꇙꇚꇛꇜꇝꇞꇟꇠꇡꇢꇣꇤꇥꇦꇧꇨꇩꇪꇫꇬꇭꇮꇯꇰꇱꇲꇳ";
 
 var f = function f(colors, texts, types) {
   return Array.from((0, _wu2["default"])(colors).map(function (color) {
@@ -30224,13 +30227,13 @@ var f = function f(colors, texts, types) {
 };
 
 var levels = {
-  3: [f(colors3, [""], ["square"]), f(colors3, [""], ["square", "circle"]), f(colors3, nums, ["square", "circle"]), f(colors3, jap, ["square", "circle"])],
+  3: [f(colors3, [""], ["square"]), f(colors3, [""], ["square", "circle"]), f(colors3, nums, ["square", "circle"]), f(colors3, jap, ["square", "circle"]), f(colorsGray, yi, ["square"])],
   4: [f(colors4, [""], ["square", "circle"]), f(colors4, nums, ["square", "circle"]), f(colors4, jap, ["square", "circle"])],
   5: [f(colors5, [""], ["square", "circle"]), f(colors5, nums, ["square", "circle"]), f(colors5, jap, ["square", "circle"])]
 };
 
 exports["default"] = {
-  3: [{ level: 1, tileUpdationRule: [{ score: 0, tiles: levels[3][0] }, { score: 1000, tiles: levels[3][1] }, { score: 3000, tiles: levels[3][2] }, { score: 6000, tiles: levels[3][3] }] }],
+  3: [{ level: 1, tileUpdationRule: [{ score: 0, tiles: levels[3][0] }, { score: 1000, tiles: levels[3][1] }, { score: 3000, tiles: levels[3][2] }, { score: 6000, tiles: levels[3][3] }, { score: 10000, tiles: levels[3][4] }] }],
   4: [{ level: 1, tileUpdationRule: [{ score: 0, tiles: levels[4][0] }, { score: 1000, tiles: levels[4][1] }, { score: 3000, tiles: levels[4][2] }] }],
   5: [{ level: 1, tileUpdationRule: [{ score: 0, tiles: levels[5][0] }, { score: 1000, tiles: levels[5][1] }, { score: 3000, tiles: levels[5][2] }] }]
 };
