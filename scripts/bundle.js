@@ -29909,7 +29909,7 @@ var Game = (function () {
   _createClass(Game, [{
     key: "_makeScoreTable",
     value: function _makeScoreTable() {
-      return new _modelsScoreScoreTable2["default"]([{ percent: 10, score: 10 }, { percent: 25, score: 5 }, { percent: 50, score: 3 }], { score: 1 });
+      return new _modelsScoreScoreTable2["default"]([{ percent: 10, score: 24 }, { percent: 25, score: 6 }, { percent: 50, score: 2 }], { score: 1 });
     }
   }, {
     key: "_makeTileUpdationRule",
@@ -30229,13 +30229,13 @@ var f = function f(colors, texts, types) {
 var levels = {
   3: [f(colors3, [""], ["square"]), f(colors3, [""], ["square", "circle"]), f(colors3, nums, ["square", "circle"]), f(colors3, jap, ["square", "circle"]), f(colorsGray, yi, ["square"])],
   4: [f(colors4, [""], ["square", "circle"]), f(colors4, nums, ["square", "circle"]), f(colors4, jap, ["square", "circle"])],
-  5: [f(colors5, [""], ["square", "circle"]), f(colors5, nums, ["square", "circle"]), f(colors5, jap, ["square", "circle"])]
+  5: [f(colors5, [""], ["square", "circle"]), f(colors5, nums, ["square", "circle"]), f(colors5, jap, ["square", "circle"]), f(colorsGray, yi, ["square"])]
 };
 
 exports["default"] = {
-  3: [{ level: 1, tileUpdationRule: [{ score: 0, tiles: levels[3][0] }, { score: 1000, tiles: levels[3][1] }, { score: 3000, tiles: levels[3][2] }, { score: 6000, tiles: levels[3][3] }, { score: 10000, tiles: levels[3][4] }] }],
+  3: [{ level: 1, tileUpdationRule: [{ score: 0, tiles: levels[3][0] }, { score: 500, tiles: levels[3][1] }, { score: 1500, tiles: levels[3][2] }, { score: 3000, tiles: levels[3][3] }, { score: 5000, tiles: levels[3][4] }] }],
   4: [{ level: 1, tileUpdationRule: [{ score: 0, tiles: levels[4][0] }, { score: 1000, tiles: levels[4][1] }, { score: 3000, tiles: levels[4][2] }] }],
-  5: [{ level: 1, tileUpdationRule: [{ score: 0, tiles: levels[5][0] }, { score: 1000, tiles: levels[5][1] }, { score: 3000, tiles: levels[5][2] }] }]
+  5: [{ level: 1, tileUpdationRule: [{ score: 0, tiles: levels[5][0] }, { score: 500, tiles: levels[5][1] }, { score: 1500, tiles: levels[5][2] }] }]
 };
 module.exports = exports["default"];
 
