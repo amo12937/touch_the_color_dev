@@ -28490,7 +28490,7 @@ var Logo = (function (_React$Component) {
         _react2["default"].createElement(
           "div",
           { className: "logo-inner" },
-          _react2["default"].createElement("img", { className: "logo-image", src: "images/logo.svg" })
+          "Touch The Color"
         )
       );
     }

@@ -57,25 +57,37 @@ html, body {
 
 .logo-inner {
   width: 76vmin;
-  height: 16vmin; }
+  height: 10vmin;
+  font-size: 8vmin;
+  font-weight: bold;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center; }
 
 .app_content {
   width: 100vmin;
   height: 100vmin;
   margin: 0 auto;
-  padding-top: 16vmin; }
+  padding-top: 10vmin; }
 
 .game-over-inner {
   width: 72vmin;
   height: 24vmin;
-  padding-top: 117vmin;
+  padding-top: 111vmin;
   margin: 0 auto; }
 
-@media screen and (min-aspect-ratio: 2 / 3) {
+@media screen and (min-aspect-ratio: 10 / 13) {
   .logo-inner {
     width: 30vmin;
-    height: 6vmin;
-    margin-left: auto; }
+    height: 5vmin;
+    margin-left: auto;
+    font-size: 3vmin; }
   .app_content {
     padding-top: 0; }
   .game-over-inner {
@@ -83,7 +95,7 @@ html, body {
 
 .logo {
   width: 76vmin;
-  height: 16vmin;
+  height: 10vmin;
   margin: 0 auto 0;
   position: absolute;
   top: 0;
