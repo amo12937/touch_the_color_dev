@@ -28337,7 +28337,7 @@ var App = (function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var gameOver = this.state.gameState == this.state.gameStates.FINISHED && _react2["default"].createElement(_componentsGameOver2["default"], { onClickRetry: this.handleRetry });
+      var gameOver = this.state.gameState == this.state.gameStates.FINISHED && _react2["default"].createElement(_componentsGameOver2["default"], { onClickRetry: this.handleRetry, score: this.state.score });
 
       return _react2["default"].createElement(
         "div",
@@ -28381,7 +28381,7 @@ var App = (function (_React$Component) {
 exports["default"] = App;
 module.exports = exports["default"];
 
-},{"components/GameOver":195,"components/Logo":196,"components/ScoreHintContainer":197,"components/Timer":199,"components/board/Board":200,"models/game/Game":216,"models/master/LevelMaster":221,"react":192,"react-addons-css-transition-group":28}],195:[function(require,module,exports){
+},{"components/GameOver":195,"components/Logo":196,"components/ScoreHintContainer":197,"components/Timer":199,"components/board/Board":200,"models/game/Game":218,"models/master/LevelMaster":223,"react":192,"react-addons-css-transition-group":28}],195:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28405,6 +28405,10 @@ var _react2 = _interopRequireDefault(_react);
 var _reactAddonsCssTransitionGroup = require("react-addons-css-transition-group");
 
 var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
+
+var _componentsSnsSNSContainer = require("components/sns/SNSContainer");
+
+var _componentsSnsSNSContainer2 = _interopRequireDefault(_componentsSnsSNSContainer);
 
 var GameOver = (function (_React$Component) {
   _inherits(GameOver, _React$Component);
@@ -28434,7 +28438,8 @@ var GameOver = (function (_React$Component) {
             "div",
             { className: "game-over-retry", onClick: this.handleClickRetry },
             "retry"
-          )
+          ),
+          _react2["default"].createElement(_componentsSnsSNSContainer2["default"], { score: this.props.score })
         )
       );
     }
@@ -28446,7 +28451,7 @@ var GameOver = (function (_React$Component) {
 exports["default"] = GameOver;
 module.exports = exports["default"];
 
-},{"react":192,"react-addons-css-transition-group":28}],196:[function(require,module,exports){
+},{"components/sns/SNSContainer":207,"react":192,"react-addons-css-transition-group":28}],196:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29228,6 +29233,123 @@ module.exports = exports["default"];
 },{"components/score/Score":205,"react":192}],207:[function(require,module,exports){
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _componentsSnsTweetButton = require("components/sns/TweetButton");
+
+var _componentsSnsTweetButton2 = _interopRequireDefault(_componentsSnsTweetButton);
+
+var SNSContainer = (function (_React$Component) {
+  _inherits(SNSContainer, _React$Component);
+
+  function SNSContainer() {
+    _classCallCheck(this, SNSContainer);
+
+    _get(Object.getPrototypeOf(SNSContainer.prototype), "constructor", this).apply(this, arguments);
+  }
+
+  _createClass(SNSContainer, [{
+    key: "render",
+    value: function render() {
+      return _react2["default"].createElement(
+        "div",
+        { className: "sns-container" },
+        _react2["default"].createElement(_componentsSnsTweetButton2["default"], { score: this.props.score })
+      );
+    }
+  }]);
+
+  return SNSContainer;
+})(_react2["default"].Component);
+
+exports["default"] = SNSContainer;
+module.exports = exports["default"];
+
+},{"components/sns/TweetButton":208,"react":192}],208:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var TweetButton = (function (_React$Component) {
+  _inherits(TweetButton, _React$Component);
+
+  function TweetButton() {
+    _classCallCheck(this, TweetButton);
+
+    _get(Object.getPrototypeOf(TweetButton.prototype), "constructor", this).apply(this, arguments);
+  }
+
+  _createClass(TweetButton, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      console.log(this.refs.tweetButton);
+      twttr.widgets.load(this.refs.tweetButton);
+    }
+  }, {
+    key: "makeText",
+    value: function makeText(score) {
+      var prefix = score.isNewRecord() ? "[New Record] " : "";
+      return prefix + "I scored " + score.current.value + " pt at #touch_the_color !";
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var text = this.makeText(this.props.score);
+
+      return _react2["default"].createElement(
+        "a",
+        { ref: "tweetButton",
+          href: "https://twitter.com/share",
+          className: "twitter-share-button",
+          "data-size": "large",
+          "data-text": text,
+          "data-show-count": "false" },
+        "Tweet"
+      );
+    }
+  }]);
+
+  return TweetButton;
+})(_react2["default"].Component);
+
+exports["default"] = TweetButton;
+module.exports = exports["default"];
+
+},{"react":192}],209:[function(require,module,exports){
+"use strict";
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 var _react = require("react");
@@ -29256,7 +29378,7 @@ document.addEventListener("touchmove", function (e) {
   e.preventDefault();
 });
 
-},{"./components/App":194,"./prevent_zoom":225,"react":192,"react-dom":30}],208:[function(require,module,exports){
+},{"./components/App":194,"./prevent_zoom":227,"react":192,"react-dom":30}],210:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29312,7 +29434,7 @@ var Color = (function () {
 exports["default"] = Color;
 module.exports = exports["default"];
 
-},{}],209:[function(require,module,exports){
+},{}],211:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29371,7 +29493,7 @@ var Hint = (function () {
 exports["default"] = Hint;
 module.exports = exports["default"];
 
-},{"wu":193}],210:[function(require,module,exports){
+},{"wu":193}],212:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29424,7 +29546,7 @@ var Pool = (function () {
 exports["default"] = Pool;
 module.exports = exports["default"];
 
-},{"models/Rand":212}],211:[function(require,module,exports){
+},{"models/Rand":214}],213:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29461,7 +29583,7 @@ var PrefixStorage = (function () {
 exports["default"] = PrefixStorage;
 module.exports = exports["default"];
 
-},{}],212:[function(require,module,exports){
+},{}],214:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29489,7 +29611,7 @@ exports["default"] = (function () {
 
 module.exports = exports["default"];
 
-},{"wu":193}],213:[function(require,module,exports){
+},{"wu":193}],215:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29519,7 +29641,7 @@ var Tile = function Tile(bgColor) {
 exports["default"] = Tile;
 module.exports = exports["default"];
 
-},{}],214:[function(require,module,exports){
+},{}],216:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29585,7 +29707,7 @@ var TileContainer = function TileContainer(size, pool) {
 exports["default"] = TileContainer;
 module.exports = exports["default"];
 
-},{"wu":193}],215:[function(require,module,exports){
+},{"wu":193}],217:[function(require,module,exports){
 "use strict";
 
 /*
@@ -29668,7 +29790,7 @@ var Timer = (function () {
 exports["default"] = Timer;
 module.exports = exports["default"];
 
-},{}],216:[function(require,module,exports){
+},{}],218:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29862,7 +29984,7 @@ var Game = (function () {
 exports["default"] = Game;
 module.exports = exports["default"];
 
-},{"javascript-state-machine":25,"models/Color":208,"models/Hint":209,"models/Pool":210,"models/PrefixStorage":211,"models/Rand":212,"models/Tile":213,"models/TileContainer":214,"models/Timer":215,"models/game/states/Finished":217,"models/game/states/Init":218,"models/game/states/Started":219,"models/score/Score":222,"models/score/ScoreTable":223,"wu":193}],217:[function(require,module,exports){
+},{"javascript-state-machine":25,"models/Color":210,"models/Hint":211,"models/Pool":212,"models/PrefixStorage":213,"models/Rand":214,"models/Tile":215,"models/TileContainer":216,"models/Timer":217,"models/game/states/Finished":219,"models/game/states/Init":220,"models/game/states/Started":221,"models/score/Score":224,"models/score/ScoreTable":225,"wu":193}],219:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29907,7 +30029,7 @@ var Finished = (function () {
 exports["default"] = Finished;
 module.exports = exports["default"];
 
-},{}],218:[function(require,module,exports){
+},{}],220:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29957,7 +30079,7 @@ var Init = (function () {
 exports["default"] = Init;
 module.exports = exports["default"];
 
-},{}],219:[function(require,module,exports){
+},{}],221:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30011,7 +30133,7 @@ var Started = (function () {
 exports["default"] = Started;
 module.exports = exports["default"];
 
-},{}],220:[function(require,module,exports){
+},{}],222:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30054,7 +30176,7 @@ exports["default"] = {
 };
 module.exports = exports["default"];
 
-},{"models/Color":208}],221:[function(require,module,exports){
+},{"models/Color":210}],223:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30114,7 +30236,7 @@ exports["default"] = {
 };
 module.exports = exports["default"];
 
-},{"models/Color":208,"models/Tile":213,"models/master/ColorMaster":220,"wu":193}],222:[function(require,module,exports){
+},{"models/Color":210,"models/Tile":215,"models/master/ColorMaster":222,"wu":193}],224:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30169,6 +30291,7 @@ var Score = (function () {
       this.current.update(0);
       var best = 1 * this._storage.getItem("best-" + num);
       this.best.update(best);
+      this._isNewRecord = false;
     }
   }, {
     key: "count",
@@ -30177,9 +30300,15 @@ var Score = (function () {
 
       this.current.update(this.current.value + n);
       if (this.best.value < this.current.value) {
+        this._isNewRecord = true;
         this.best.update(this.current.value);
         this._storage.setItem("best-" + this._num, this.current.value);
       }
+    }
+  }, {
+    key: "isNewRecord",
+    value: function isNewRecord() {
+      return this._isNewRecord;
     }
   }]);
 
@@ -30189,7 +30318,7 @@ var Score = (function () {
 exports["default"] = Score;
 module.exports = exports["default"];
 
-},{"models/score/ScoreValue":224}],223:[function(require,module,exports){
+},{"models/score/ScoreValue":226}],225:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30223,7 +30352,7 @@ var ScoreTable = (function () {
 exports["default"] = ScoreTable;
 module.exports = exports["default"];
 
-},{}],224:[function(require,module,exports){
+},{}],226:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30268,7 +30397,7 @@ var ScoreValue = (function () {
 exports["default"] = ScoreValue;
 module.exports = exports["default"];
 
-},{}],225:[function(require,module,exports){
+},{}],227:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30296,4 +30425,4 @@ exports["default"] = function (d) {
 
 module.exports = exports["default"];
 
-},{}]},{},[207]);
+},{}]},{},[209]);
