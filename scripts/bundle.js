@@ -29468,7 +29468,7 @@ var Hint = (function () {
       return x;
     };
 
-    rs.take(hintSize).forEach(getNext);
+    rs.take(tileSize).forEach(getNext);
 
     this.hints = hints;
     this.cleanup = function () {
