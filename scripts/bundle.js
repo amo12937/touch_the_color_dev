@@ -28245,6 +28245,10 @@ var _reactAddonsCssTransitionGroup = require("react-addons-css-transition-group"
 
 var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
 
+var _componentsLogo = require("components/Logo");
+
+var _componentsLogo2 = _interopRequireDefault(_componentsLogo);
+
 var _componentsScoreHintContainer = require("components/ScoreHintContainer");
 
 var _componentsScoreHintContainer2 = _interopRequireDefault(_componentsScoreHintContainer);
@@ -28261,6 +28265,10 @@ var _componentsGameOver = require("components/GameOver");
 
 var _componentsGameOver2 = _interopRequireDefault(_componentsGameOver);
 
+var _modelsMasterLevelMaster = require("models/master/LevelMaster");
+
+var _modelsMasterLevelMaster2 = _interopRequireDefault(_modelsMasterLevelMaster);
+
 var _modelsGameGame = require("models/game/Game");
 
 var _modelsGameGame2 = _interopRequireDefault(_modelsGameGame);
@@ -28272,13 +28280,16 @@ var App = (function (_React$Component) {
     _classCallCheck(this, App);
 
     _get(Object.getPrototypeOf(App.prototype), "constructor", this).call(this, props);
-    this.game = new _modelsGameGame2["default"]();
+    this.size = 3;
+    var lv = _modelsMasterLevelMaster2["default"][this.size][0];
+    this.game = new _modelsGameGame2["default"](this.size, lv);
 
     this.state = this.getState();
 
-    this.handleClick = this.handleClick.bind(this);
-    this.handleTimeup = this.handleTimeup.bind(this);
-    this.handleRetry = this.handleRetry.bind(this);
+    var self = this;
+    ["handleClick", "handleTimeup", "handleRetry", "handlePause", "handleResume"].forEach(function (key) {
+      self[key] = self[key].bind(self);
+    });
   }
 
   _createClass(App, [{
@@ -28310,6 +28321,18 @@ var App = (function (_React$Component) {
       this.setState(this.getState());
     }
   }, {
+    key: "handlePause",
+    value: function handlePause() {
+      this.game.pause();
+      this.setState(this.getState());
+    }
+  }, {
+    key: "handleResume",
+    value: function handleResume() {
+      this.game.resume();
+      this.setState(this.getState());
+    }
+  }, {
     key: "getState",
     value: function getState() {
       return {
@@ -28320,17 +28343,19 @@ var App = (function (_React$Component) {
         hints: this.game.hints(),
         tiles: this.game.tiles(),
         appeals: this.game.appeals(),
-        failed: {}
+        failed: {},
+        num: this.size
       };
     }
   }, {
     key: "render",
     value: function render() {
-      var gameOver = this.state.gameState == this.state.gameStates.FINISHED && _react2["default"].createElement(_componentsGameOver2["default"], { onClickRetry: this.handleRetry });
+      var gameOver = this.state.gameState == this.state.gameStates.FINISHED && _react2["default"].createElement(_componentsGameOver2["default"], { onClickRetry: this.handleRetry, score: this.state.score });
 
       return _react2["default"].createElement(
         "div",
         { className: "app" },
+        _react2["default"].createElement(_componentsLogo2["default"], null),
         _react2["default"].createElement(
           "div",
           { className: "app_content" },
@@ -28340,11 +28365,13 @@ var App = (function (_React$Component) {
             gameStates: this.state.gameStates,
             now: Date.now(),
             timer: this.state.timer,
-            onTimeup: this.handleTimeup
+            onTimeup: this.handleTimeup,
+            onPause: this.handlePause,
+            onResume: this.handleResume
           }),
           _react2["default"].createElement(_componentsBoardBoard2["default"], {
-            num_of_rows: 3,
-            num_of_cells: 3,
+            num_of_rows: this.state.num,
+            num_of_cells: this.state.num,
             tiles: this.state.tiles,
             appeals: this.state.appeals,
             failed: this.state.failed,
@@ -28369,7 +28396,7 @@ var App = (function (_React$Component) {
 exports["default"] = App;
 module.exports = exports["default"];
 
-},{"components/GameOver":195,"components/ScoreHintContainer":196,"components/Timer":198,"components/board/Board":199,"models/game/Game":216,"react":192,"react-addons-css-transition-group":28}],195:[function(require,module,exports){
+},{"components/GameOver":195,"components/Logo":196,"components/ScoreHintContainer":197,"components/Timer":199,"components/board/Board":200,"models/game/Game":218,"models/master/LevelMaster":224,"react":192,"react-addons-css-transition-group":28}],195:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28394,6 +28421,10 @@ var _reactAddonsCssTransitionGroup = require("react-addons-css-transition-group"
 
 var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
 
+var _componentsSnsSNSContainer = require("components/sns/SNSContainer");
+
+var _componentsSnsSNSContainer2 = _interopRequireDefault(_componentsSnsSNSContainer);
+
 var GameOver = (function (_React$Component) {
   _inherits(GameOver, _React$Component);
 
@@ -28417,16 +28448,13 @@ var GameOver = (function (_React$Component) {
         { className: "game-over" },
         _react2["default"].createElement(
           "div",
-          { className: "game-over-outer" },
+          { className: "game-over-inner" },
           _react2["default"].createElement(
             "div",
-            { className: "game-over-inner" },
-            _react2["default"].createElement(
-              "div",
-              { className: "game-over-retry", onClick: this.handleClickRetry },
-              "retry"
-            )
-          )
+            { className: "game-over-retry", onClick: this.handleClickRetry },
+            "retry"
+          ),
+          _react2["default"].createElement(_componentsSnsSNSContainer2["default"], { score: this.props.score })
         )
       );
     }
@@ -28438,7 +28466,58 @@ var GameOver = (function (_React$Component) {
 exports["default"] = GameOver;
 module.exports = exports["default"];
 
-},{"react":192,"react-addons-css-transition-group":28}],196:[function(require,module,exports){
+},{"components/sns/SNSContainer":207,"react":192,"react-addons-css-transition-group":28}],196:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var Logo = (function (_React$Component) {
+  _inherits(Logo, _React$Component);
+
+  function Logo() {
+    _classCallCheck(this, Logo);
+
+    _get(Object.getPrototypeOf(Logo.prototype), "constructor", this).apply(this, arguments);
+  }
+
+  _createClass(Logo, [{
+    key: "render",
+    value: function render() {
+      return _react2["default"].createElement(
+        "div",
+        { className: "logo" },
+        _react2["default"].createElement(
+          "div",
+          { className: "logo-inner" },
+          "Touch The Color"
+        )
+      );
+    }
+  }]);
+
+  return Logo;
+})(_react2["default"].Component);
+
+exports["default"] = Logo;
+module.exports = exports["default"];
+
+},{"react":192}],197:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28494,7 +28573,7 @@ var ScoreHintContainer = (function (_React$Component) {
 exports["default"] = ScoreHintContainer;
 module.exports = exports["default"];
 
-},{"components/hint/HintContainer":203,"components/score/ScoreContainer":205,"react":192}],197:[function(require,module,exports){
+},{"components/hint/HintContainer":204,"components/score/ScoreContainer":206,"react":192}],198:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28530,7 +28609,7 @@ var Tile = (function (_React$Component) {
       var tile = this.props.tile;
       return _react2["default"].createElement(
         "div",
-        { className: "tile", style: { backgroundColor: tile.borderColor } },
+        { className: "font tile " + tile.className, style: { backgroundColor: tile.borderColor } },
         _react2["default"].createElement(
           "div",
           { className: "tile_content", style: {
@@ -28549,7 +28628,7 @@ var Tile = (function (_React$Component) {
 exports["default"] = Tile;
 module.exports = exports["default"];
 
-},{"react":192}],198:[function(require,module,exports){
+},{"react":192}],199:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28624,16 +28703,50 @@ var TimerWaiting = (function (_React$Component2) {
   _createClass(TimerWaiting, [{
     key: "render",
     value: function render() {
-      var width = this.props.gameState == this.props.gameStates.INIT ? 0 : 100;
-      return _react2["default"].createElement("div", { className: "timer_front", style: { width: "" + width + "%" } });
+      var now = this.props.now;
+      var timer = this.props.timer;
+      return _react2["default"].createElement("div", { className: "timer_front timer_front-waiting", style: {
+          animationDuration: timer.max + "ms",
+          animationDelay: "-" + timer.elapsedTime(now) + "ms"
+        } });
     }
   }]);
 
   return TimerWaiting;
 })(_react2["default"].Component);
 
-var Timer = (function (_React$Component3) {
-  _inherits(Timer, _React$Component3);
+var PauseButton = (function (_React$Component3) {
+  _inherits(PauseButton, _React$Component3);
+
+  function PauseButton(props) {
+    _classCallCheck(this, PauseButton);
+
+    _get(Object.getPrototypeOf(PauseButton.prototype), "constructor", this).call(this, props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  _createClass(PauseButton, [{
+    key: "handleClick",
+    value: function handleClick() {
+      var timer = this.props.timer;
+      if (timer.is("Running")) this.props.onPause();else if (timer.is("Pausing")) this.props.onResume();
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var timer = this.props.timer;
+      var classes = ["pause-button"];
+      if (timer.is("Running")) classes.push("pause-button-pause");else if (timer.is("Pausing")) classes.push("pause-button-resume");else classes.push("pause-button-waiting");
+
+      return _react2["default"].createElement("div", { className: classes.join(" "), onClick: this.handleClick });
+    }
+  }]);
+
+  return PauseButton;
+})(_react2["default"].Component);
+
+var Timer = (function (_React$Component4) {
+  _inherits(Timer, _React$Component4);
 
   function Timer() {
     _classCallCheck(this, Timer);
@@ -28649,9 +28762,7 @@ var Timer = (function (_React$Component3) {
       var child = this.props.gameState == this.props.gameStates.STARTED ? _react2["default"].createElement(TimerActive, {
         key: Math.random(),
         now: now, timer: timer,
-        onTimeup: this.props.onTimeup }) : _react2["default"].createElement(TimerWaiting, {
-        gameState: this.props.gameState,
-        gameStates: this.props.gameStates });
+        onTimeup: this.props.onTimeup }) : _react2["default"].createElement(TimerWaiting, { now: now, timer: timer });
 
       return _react2["default"].createElement(
         "div",
@@ -28660,7 +28771,10 @@ var Timer = (function (_React$Component3) {
           "div",
           { className: "timer_back" },
           child
-        )
+        ),
+        _react2["default"].createElement(PauseButton, { timer: timer,
+          onPause: this.props.onPause,
+          onResume: this.props.onResume })
       );
     }
   }]);
@@ -28671,7 +28785,7 @@ var Timer = (function (_React$Component3) {
 exports["default"] = Timer;
 module.exports = exports["default"];
 
-},{"react":192}],199:[function(require,module,exports){
+},{"react":192}],200:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28735,7 +28849,7 @@ var Board = (function (_React$Component) {
 exports["default"] = Board;
 module.exports = exports["default"];
 
-},{"components/board/BoardRow":201,"react":192}],200:[function(require,module,exports){
+},{"components/board/BoardRow":202,"react":192}],201:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28795,7 +28909,7 @@ var BoardCell = (function (_React$Component) {
 
       var tile = this.props.tile;
 
-      var classes = ["board_cell"];
+      var classes = ["board_cell", "board_cell-" + this.props.num_of_cells];
       if (this.props.appeal) classes.push("board_cell_appeal");
 
       return _react2["default"].createElement(
@@ -28828,7 +28942,7 @@ var BoardCell = (function (_React$Component) {
 exports["default"] = BoardCell;
 module.exports = exports["default"];
 
-},{"components/Tile":197,"react":192,"react-addons-css-transition-group":28,"react-animate-on-change":29,"wu":193}],201:[function(require,module,exports){
+},{"components/Tile":198,"react":192,"react-addons-css-transition-group":28,"react-animate-on-change":29,"wu":193}],202:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28874,13 +28988,14 @@ var BoardRow = (function (_React$Component) {
           tile: this.props.tiles[cell_id],
           appeal: this.props.appeals[cell_id] || false,
           failed: this.props.failed[cell_id] || false,
-          onClick: this.props.onClick
+          onClick: this.props.onClick,
+          num_of_cells: this.props.num_of_cells
         }));
       }
 
       return _react2["default"].createElement(
         "div",
-        { className: "board_row" },
+        { className: "board_row board_row-" + this.props.num_of_cells },
         cells
       );
     }
@@ -28892,7 +29007,7 @@ var BoardRow = (function (_React$Component) {
 exports["default"] = BoardRow;
 module.exports = exports["default"];
 
-},{"components/board/BoardCell":200,"react":192}],202:[function(require,module,exports){
+},{"components/board/BoardCell":201,"react":192}],203:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28944,7 +29059,7 @@ var Hint = (function (_React$Component) {
 exports["default"] = Hint;
 module.exports = exports["default"];
 
-},{"components/Tile":197,"react":192}],203:[function(require,module,exports){
+},{"components/Tile":198,"react":192}],204:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29009,7 +29124,7 @@ var HintContainer = (function (_React$Component) {
 exports["default"] = HintContainer;
 module.exports = exports["default"];
 
-},{"components/hint/Hint":202,"react":192,"react-addons-css-transition-group":28}],204:[function(require,module,exports){
+},{"components/hint/Hint":203,"react":192,"react-addons-css-transition-group":28}],205:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29113,7 +29228,7 @@ var Score = (function (_React$Component) {
 exports["default"] = Score;
 module.exports = exports["default"];
 
-},{"react":192,"react-addons-css-transition-group":28}],205:[function(require,module,exports){
+},{"react":192,"react-addons-css-transition-group":28}],206:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29165,7 +29280,124 @@ var ScoreContainer = (function (_React$Component) {
 exports["default"] = ScoreContainer;
 module.exports = exports["default"];
 
-},{"components/score/Score":204,"react":192}],206:[function(require,module,exports){
+},{"components/score/Score":205,"react":192}],207:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _componentsSnsTweetButton = require("components/sns/TweetButton");
+
+var _componentsSnsTweetButton2 = _interopRequireDefault(_componentsSnsTweetButton);
+
+var SNSContainer = (function (_React$Component) {
+  _inherits(SNSContainer, _React$Component);
+
+  function SNSContainer() {
+    _classCallCheck(this, SNSContainer);
+
+    _get(Object.getPrototypeOf(SNSContainer.prototype), "constructor", this).apply(this, arguments);
+  }
+
+  _createClass(SNSContainer, [{
+    key: "render",
+    value: function render() {
+      return _react2["default"].createElement(
+        "div",
+        { className: "sns-container" },
+        _react2["default"].createElement(_componentsSnsTweetButton2["default"], { score: this.props.score })
+      );
+    }
+  }]);
+
+  return SNSContainer;
+})(_react2["default"].Component);
+
+exports["default"] = SNSContainer;
+module.exports = exports["default"];
+
+},{"components/sns/TweetButton":208,"react":192}],208:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var TweetButton = (function (_React$Component) {
+  _inherits(TweetButton, _React$Component);
+
+  function TweetButton() {
+    _classCallCheck(this, TweetButton);
+
+    _get(Object.getPrototypeOf(TweetButton.prototype), "constructor", this).apply(this, arguments);
+  }
+
+  _createClass(TweetButton, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      console.log(this.refs.tweetButton);
+      twttr.widgets.load(this.refs.tweetButton);
+    }
+  }, {
+    key: "makeText",
+    value: function makeText(score) {
+      var prefix = score.isNewRecord() ? "[New Record] " : "";
+      return prefix + "I scored " + score.current.value + " pt at #touch_the_color !";
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var text = this.makeText(this.props.score);
+
+      return _react2["default"].createElement(
+        "a",
+        { ref: "tweetButton",
+          href: "https://twitter.com/share",
+          className: "twitter-share-button",
+          "data-size": "large",
+          "data-text": text,
+          "data-show-count": "false" },
+        "Tweet"
+      );
+    }
+  }]);
+
+  return TweetButton;
+})(_react2["default"].Component);
+
+exports["default"] = TweetButton;
+module.exports = exports["default"];
+
+},{"react":192}],209:[function(require,module,exports){
 "use strict";
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -29196,7 +29428,7 @@ document.addEventListener("touchmove", function (e) {
   e.preventDefault();
 });
 
-},{"./components/App":194,"./prevent_zoom":223,"react":192,"react-dom":30}],207:[function(require,module,exports){
+},{"./components/App":194,"./prevent_zoom":228,"react":192,"react-dom":30}],210:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29208,12 +29440,12 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Color = (function () {
-  function Color(r, g, b) {
+  function Color(rgb) {
     _classCallCheck(this, Color);
 
-    this._r = r;
-    this._g = g;
-    this._b = b;
+    this._r = (rgb >> 16) % 0x100;
+    this._g = (rgb >> 8) % 0x100;
+    this._b = (rgb >> 0) % 0x100;
   }
 
   _createClass(Color, [{
@@ -29237,7 +29469,12 @@ var Color = (function () {
   }, {
     key: "textColor",
     value: function textColor() {
-      return this.isBright() ? new Color(0, 0, 0) : new Color(0xff, 0xff, 0xff);
+      return this.isBright() ? new Color(0) : new Color(0xffffff);
+    }
+  }, {
+    key: "isWhite",
+    value: function isWhite() {
+      return this._r == 0xff && this._g == 0xff && this._b == 0xff;
     }
   }]);
 
@@ -29247,65 +29484,7 @@ var Color = (function () {
 exports["default"] = Color;
 module.exports = exports["default"];
 
-},{}],208:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-var _modelsColor = require("models/Color");
-
-var _modelsColor2 = _interopRequireDefault(_modelsColor);
-
-exports["default"] = [[new _modelsColor2["default"](0x3a, 0x30, 0x42), new _modelsColor2["default"](0x49, 0x39, 0x2c), new _modelsColor2["default"](0x3b, 0x28, 0xcc), new _modelsColor2["default"](0x8c, 0x27, 0x1e), new _modelsColor2["default"](0xf4, 0x00, 0x00), new _modelsColor2["default"](0x83, 0x32, 0xac), new _modelsColor2["default"](0x77, 0x62, 0x5c), new _modelsColor2["default"](0xff, 0x78, 0x4f), new _modelsColor2["default"](0xdb, 0x9d, 0x47), new _modelsColor2["default"](0xe0, 0x86, 0xd3), new _modelsColor2["default"](0x1b, 0xe7, 0xff), new _modelsColor2["default"](0xff, 0xb8, 0x00), new _modelsColor2["default"](0x6e, 0xeb, 0x83), new _modelsColor2["default"](0xad, 0xd7, 0xf6), new _modelsColor2["default"](0xe4, 0xff, 0x1a), new _modelsColor2["default"](0xff, 0xe1, 0x9c), new _modelsColor2["default"](0xed, 0xff, 0xd9)], [new _modelsColor2["default"](0x98, 0xd2, 0xeb), new _modelsColor2["default"](0xe1, 0xf2, 0xfe), new _modelsColor2["default"](0xb2, 0xb1, 0xcf), new _modelsColor2["default"](0xab, 0xa1, 0x94), new _modelsColor2["default"](0xcf, 0xcb, 0xca), new _modelsColor2["default"](0xd8, 0xdd, 0xde), new _modelsColor2["default"](0xd9, 0xf7, 0xfa), new _modelsColor2["default"](0x2f, 0x4b, 0x26), new _modelsColor2["default"](0x3e, 0x88, 0x5b), new _modelsColor2["default"](0x85, 0xbd, 0xa6), new _modelsColor2["default"](0xbe, 0xdc, 0xfe), new _modelsColor2["default"](0xc0, 0xd7, 0xbb), new _modelsColor2["default"](0xba, 0xd1, 0xcd), new _modelsColor2["default"](0xf2, 0xd1, 0xc9), new _modelsColor2["default"](0x46, 0x27, 0x49), new _modelsColor2["default"](0x87, 0xbf, 0xff), new _modelsColor2["default"](0x3f, 0x8e, 0xfc), new _modelsColor2["default"](0x26, 0x67, 0xff), new _modelsColor2["default"](0xed, 0x3f, 0x2f), new _modelsColor2["default"](0xf4, 0x79, 0x6b), new _modelsColor2["default"](0xf4, 0x99, 0x8d)]];
-
-// https://coolors.co/c6fbff-ffe0ea-ffe1c6-edd7ec-fff7ae
-/*
-  new Color(0x3a, 0x30, 0x42),
-  new Color(0xdb, 0x9d, 0x47),
-  new Color(0xff, 0x78, 0x4f),
-  new Color(0xff, 0xe1, 0x9c),
-  new Color(0xed, 0xff, 0xd9),
-//  new Color(0x98, 0xd2, 0xeb),
-//  new Color(0xe1, 0xf2, 0xfe),
-//  new Color(0xb2, 0xb1, 0xcf),
-  new Color(0x77, 0x62, 0x5c),
-  new Color(0x49, 0x39, 0x2c),
-  new Color(0x8c, 0x27, 0x1e),
-//  new Color(0xab, 0xa1, 0x94),
-//  new Color(0xcf, 0xcb, 0xca),
-//  new Color(0xd8, 0xdd, 0xde),
-//  new Color(0xd9, 0xf7, 0xfa),
-//  new Color(0x2f, 0x4b, 0x26),
-//  new Color(0x3e, 0x88, 0x5b),
-//  new Color(0x85, 0xbd, 0xa6),
-//  new Color(0xbe, 0xdc, 0xfe),
-//  new Color(0xc0, 0xd7, 0xbb),
-//  new Color(0xba, 0xd1, 0xcd),
-//  new Color(0xf2, 0xd1, 0xc9),
-  new Color(0xe0, 0x86, 0xd3),
-  new Color(0x83, 0x32, 0xac),
-//  new Color(0x46, 0x27, 0x49),
-  new Color(0xad, 0xd7, 0xf6),
-//  new Color(0x87, 0xbf, 0xff),
-//  new Color(0x3f, 0x8e, 0xfc),
-//  new Color(0x26, 0x67, 0xff),
-  new Color(0x3b, 0x28, 0xcc),
-  new Color(0x1b, 0xe7, 0xff),
-  new Color(0x6e, 0xeb, 0x83),
-  new Color(0xe4, 0xff, 0x1a),
-  new Color(0xff, 0xb8, 0x00),
-//  new Color(0xed, 0x3f, 0x2f),
-  new Color(0xf4, 0x00, 0x00),
-//  new Color(0xf4, 0x79, 0x6b),
-//  new Color(0xf4, 0x99, 0x8d)
- */
-module.exports = exports["default"];
-
-},{"models/Color":207}],209:[function(require,module,exports){
+},{}],211:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29339,7 +29518,7 @@ var Hint = (function () {
       return x;
     };
 
-    rs.take(hintSize).forEach(getNext);
+    rs.take(tileSize).forEach(getNext);
 
     this.hints = hints;
     this.cleanup = function () {
@@ -29364,7 +29543,7 @@ var Hint = (function () {
 exports["default"] = Hint;
 module.exports = exports["default"];
 
-},{"wu":193}],210:[function(require,module,exports){
+},{"wu":193}],212:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29417,7 +29596,7 @@ var Pool = (function () {
 exports["default"] = Pool;
 module.exports = exports["default"];
 
-},{"models/Rand":212}],211:[function(require,module,exports){
+},{"models/Rand":214}],213:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29454,7 +29633,7 @@ var PrefixStorage = (function () {
 exports["default"] = PrefixStorage;
 module.exports = exports["default"];
 
-},{}],212:[function(require,module,exports){
+},{}],214:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29482,7 +29661,7 @@ exports["default"] = (function () {
 
 module.exports = exports["default"];
 
-},{"wu":193}],213:[function(require,module,exports){
+},{"wu":193}],215:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29494,7 +29673,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Tile = function Tile(bgColor) {
   var borderColor = arguments.length <= 1 || arguments[1] === undefined ? bgColor : arguments[1];
   var text = arguments.length <= 2 || arguments[2] === undefined ? "" : arguments[2];
-  var key = arguments.length <= 3 || arguments[3] === undefined ? Math.random() : arguments[3];
+  var klass = arguments.length <= 3 || arguments[3] === undefined ? "square" : arguments[3];
+  var key = arguments.length <= 4 || arguments[4] === undefined ? Math.random() : arguments[4];
   return (function () {
     _classCallCheck(this, Tile);
 
@@ -29502,14 +29682,16 @@ var Tile = function Tile(bgColor) {
     this.borderColor = borderColor;
     this.text = text;
     this.textColor = bgColor.textColor();
+    this.className = klass;
     this.key = key;
+    this.hash = "" + bgColor + borderColor + text + klass;
   }).apply(this, arguments);
 };
 
 exports["default"] = Tile;
 module.exports = exports["default"];
 
-},{}],214:[function(require,module,exports){
+},{}],216:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29533,8 +29715,11 @@ var TileContainer = function TileContainer(size, pool) {
     pool = newPool;
   };
 
+  var tilesSet = new Set();
   var tiles = Array.from(_wu2["default"].count().take(size).map(function () {
-    return pool.borrow();
+    var poolItem = pool.borrow();
+    tilesSet.add(poolItem.item.hash);
+    return poolItem;
   }));
 
   this.trySelect = function (i) {
@@ -29543,8 +29728,22 @@ var TileContainer = function TileContainer(size, pool) {
 
   this.select = function (i) {
     if (!_this.trySelect(i)) return false;
+    var conflicts = [];
+    var poolItem = pool.borrow();
+    while (tilesSet.has(poolItem.item.hash)) {
+      conflicts.push(poolItem);
+      poolItem = pool.borrow();
+    }
+
+    conflicts.forEach(function (poolItem) {
+      poolItem.backToPool();
+    });
+
     var oldItem = tiles[i];
-    tiles[i] = pool.borrow();
+    tiles[i] = poolItem;
+    tilesSet["delete"](oldItem.item.hash);
+    tilesSet.add(poolItem.item.hash);
+
     oldItem.backToPool();
     return true;
   };
@@ -29558,8 +29757,20 @@ var TileContainer = function TileContainer(size, pool) {
 exports["default"] = TileContainer;
 module.exports = exports["default"];
 
-},{"wu":193}],215:[function(require,module,exports){
+},{"wu":193}],217:[function(require,module,exports){
 "use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _javascriptStateMachine = require("javascript-state-machine");
+
+var _javascriptStateMachine2 = _interopRequireDefault(_javascriptStateMachine);
 
 /*
  *  waiting    | running                      | finished
@@ -29567,81 +29778,107 @@ module.exports = exports["default"];
  *             `startTime   `currentTime      `endTime
  */
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+var Timer = function Timer(max) {
+  var _this = this;
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+  _classCallCheck(this, Timer);
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  this.max = max;
+  var startTime, endTime, pauseTime;
 
-var Timer = (function () {
-  function Timer(max) {
-    _classCallCheck(this, Timer);
+  var setSpan = function setSpan(n) {
+    startTime = n;
+    endTime = n + max;
+  };
 
-    this.max = max;
-    this.reset();
-  }
+  var fsm = _javascriptStateMachine2["default"].create({
+    initial: "Waiting",
+    events: [{ name: "start", from: "Waiting", to: "Running" }, { name: "add", from: "Running", to: "Running" }, { name: "pause", from: "Running", to: "Pausing" }, { name: "resume", from: "Pausing", to: "Running" }, { name: "timeup", from: "Running", to: "Finished" }, { name: "reset", from: "Finished", to: "Waiting" }],
+    callbacks: {
+      onWaiting: function onWaiting() {
+        setSpan(Infinity);
+      },
+      onstart: function onstart(ev, f, t, now) {
+        setSpan(now);
+      },
+      onadd: function onadd(ev, f, t, now, msec) {
+        setSpan(Math.min(startTime + msec, now));
+      },
+      onbeforepause: function onbeforepause(ev, f, t, now) {
+        return startTime <= now;
+      },
+      onenterPausing: function onenterPausing(ev, f, t, now) {
+        pauseTime = now;
+      },
+      onleavePausing: function onleavePausing(ev, f, t, now) {
+        setSpan(startTime + now - pauseTime);
+        pauseTime = null;
+      },
+      onbeforetimeup: function onbeforetimeup(ev, f, t, now) {
+        return endTime <= now;
+      }
+    }
+  });
 
-  _createClass(Timer, [{
-    key: "start",
-    value: function start(startTime) {
-      if (this.isRunning(startTime)) return;
-      this.restart(startTime);
+  var elapsedTime = {
+    Waiting: function Waiting() {
+      return 0;
+    },
+    Running: function Running(now) {
+      return Math.min(max, Math.max(0, now - startTime));
+    },
+    Pausing: function Pausing(now) {
+      return elapsedTime.Running(Math.min(now, pauseTime));
+    },
+    Finished: function Finished() {
+      return max;
     }
-  }, {
-    key: "restart",
-    value: function restart(startTime) {
-      this.startTime = startTime;
-      this.endTime = startTime + this.max;
-    }
-  }, {
-    key: "reset",
-    value: function reset() {
-      this.restart(Infinity);
-    }
-  }, {
-    key: "add",
-    value: function add(currentTime, msec) {
-      if (!this.isRunning(currentTime)) return false;
-      this.restart(Math.min(this.startTime + msec, currentTime));
+  };
 
-      return this.isRunning(currentTime);
-    }
-  }, {
-    key: "isRunning",
-    value: function isRunning(currentTime) {
-      return this.startTime <= currentTime && currentTime < this.endTime;
-    }
-  }, {
-    key: "isFinished",
-    value: function isFinished(currentTime) {
-      return this.endTime <= currentTime;
-    }
-  }, {
-    key: "elapsedTime",
-    value: function elapsedTime(currentTime) {
-      return Math.min(this.max, Math.max(0, currentTime - this.startTime));
-    }
-  }, {
-    key: "remain",
-    value: function remain(currentTime) {
-      return this.max - this.elapsedTime(currentTime);
-    }
-  }, {
-    key: "percent",
-    value: function percent(currentTime) {
-      return Math.floor(100 * this.elapsedTime(currentTime) / this.max);
-    }
-  }]);
+  this.elapsedTime = function (now) {
+    return elapsedTime[fsm.current](now);
+  };
+  this.remain = function (now) {
+    return max - _this.elapsedTime(now);
+  };
+  this.percent = function (now) {
+    return Math.floor(100 * _this.elapsedTime(now) / max);
+  };
 
-  return Timer;
-})();
+  var run = function run(ev) {
+    return function () {
+      return fsm.can(ev) && fsm[ev].apply(fsm, arguments);
+    };
+  };
+
+  this.start = run("start");
+  this.add = function (now, msec) {
+    _this.timeup(now);
+    run("add")(now, msec);
+    _this.timeup(now);
+  };
+  this.pause = function (now) {
+    _this.timeup(now);
+    return run("pause")(now);
+  };
+  this.resume = run("resume");
+  this.timeup = run("timeup");
+  this.reset = run("reset");
+  this.currentState = function () {
+    return fsm.current;
+  };
+  this.is = function (s) {
+    return fsm.is(s);
+  };
+  this.can = function (e) {
+    return fsm.can(e);
+  };
+};
 
 exports["default"] = Timer;
 module.exports = exports["default"];
 
-},{}],216:[function(require,module,exports){
+},{"javascript-state-machine":25}],218:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29686,10 +29923,6 @@ var _modelsColor = require("models/Color");
 
 var _modelsColor2 = _interopRequireDefault(_modelsColor);
 
-var _modelsColorMaster = require("models/ColorMaster");
-
-var _modelsColorMaster2 = _interopRequireDefault(_modelsColorMaster);
-
 var _modelsPool = require("models/Pool");
 
 var _modelsPool2 = _interopRequireDefault(_modelsPool);
@@ -29714,22 +29947,28 @@ var _modelsGameStatesStarted = require("models/game/states/Started");
 
 var _modelsGameStatesStarted2 = _interopRequireDefault(_modelsGameStatesStarted);
 
+var _modelsGameStatesPausing = require("models/game/states/Pausing");
+
+var _modelsGameStatesPausing2 = _interopRequireDefault(_modelsGameStatesPausing);
+
 var _modelsGameStatesFinished = require("models/game/states/Finished");
 
 var _modelsGameStatesFinished2 = _interopRequireDefault(_modelsGameStatesFinished);
 
 var Game = (function () {
-  function Game() {
+  function Game(size, lv) {
     _classCallCheck(this, Game);
 
     this.timer = new _modelsTimer2["default"](5000);
 
     var storage = new _modelsPrefixStorage2["default"](localStorage, "touch_the_color/");
-    this.score = new _modelsScoreScore2["default"](storage);
+    this.score = new _modelsScoreScore2["default"](size, storage);
+    this.size = size;
 
     this.states = {
       INIT: new _modelsGameStatesInit2["default"](this),
       STARTED: new _modelsGameStatesStarted2["default"](this),
+      PAUSING: new _modelsGameStatesPausing2["default"](this),
       FINISHED: new _modelsGameStatesFinished2["default"](this)
     };
 
@@ -29737,20 +29976,26 @@ var Game = (function () {
 
     var fsm = _javascriptStateMachine2["default"].create({
       initial: "Init",
-      events: [{ name: "start", from: "Init", to: "Started" }, { name: "timeup", from: "Started", to: "Finished" }, { name: "retry", from: "Finished", to: "Init" }],
+      events: [{ name: "start", from: "Init", to: "Started" }, { name: "pause", from: "Started", to: "Pausing" }, { name: "resume", from: "Pausing", to: "Started" }, { name: "timeup", from: "Started", to: "Finished" }, { name: "retry", from: "Finished", to: "Init" }],
       callbacks: {
         onInit: function onInit() {
-          self.score.reset();
+          self.score.reset(size);
           self.timer.reset();
           self.scoreTable = self._makeScoreTable();
-          self._tileUpdationRule = self._makeTileUpdationRule();
-          self._hintContainer = self._makeHintContainer();
-          self._tileContainer = self._makeTileContainer(self._tileUpdationRule.shift().pool);
+          self._tileUpdationRule = self._makeTileUpdationRule(lv);
+          self._hintContainer = self._makeHintContainer(size);
+          self._tileContainer = self._makeTileContainer(size, self._tileUpdationRule.shift().pool);
           self.state = self.states.INIT;
         },
-        onStarted: function onStarted() {
+        onstart: function onstart() {
           self.timer.start(Date.now());
+        },
+        onStarted: function onStarted() {
+          console.log("onStarted");
           self.state = self.states.STARTED;
+        },
+        onPausing: function onPausing() {
+          self.state = self.states.PAUSING;
         },
         onFinished: function onFinished() {
           return self.state = self.states.FINISHED;
@@ -29764,34 +30009,27 @@ var Game = (function () {
   _createClass(Game, [{
     key: "_makeScoreTable",
     value: function _makeScoreTable() {
-      return new _modelsScoreScoreTable2["default"]([{ percent: 10, score: 10 }, { percent: 25, score: 5 }, { percent: 50, score: 3 }], { score: 1 });
+      return new _modelsScoreScoreTable2["default"]([{ percent: 10, score: 24 }, { percent: 25, score: 6 }, { percent: 50, score: 2 }], { score: 1 });
     }
   }, {
     key: "_makeTileUpdationRule",
-    value: function _makeTileUpdationRule() {
-      return [{
-        score: 0,
-        pool: new _modelsPool2["default"](_modelsColorMaster2["default"][0].map(function (color) {
-          return new _modelsTile2["default"](color);
-        }))
-      }, {
-        score: 1000,
-        pool: new _modelsPool2["default"]([].concat.apply([], _modelsColorMaster2["default"][1].map(function (color) {
-          return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(function (i) {
-            return new _modelsTile2["default"](color, color, i);
-          });
-        })))
-      }];
+    value: function _makeTileUpdationRule(lv) {
+      return lv.tileUpdationRule.map(function (rule) {
+        return {
+          score: rule.score,
+          pool: new _modelsPool2["default"](rule.tiles)
+        };
+      });
     }
   }, {
     key: "_makeHintContainer",
-    value: function _makeHintContainer() {
-      return new _modelsHint2["default"](9, 4, _modelsRand2["default"].randIterator);
+    value: function _makeHintContainer(num) {
+      return new _modelsHint2["default"](num * num, 4, _modelsRand2["default"].randIterator);
     }
   }, {
     key: "_makeTileContainer",
-    value: function _makeTileContainer(pool) {
-      return new _modelsTileContainer2["default"](9, pool);
+    value: function _makeTileContainer(num, pool) {
+      return new _modelsTileContainer2["default"](num * num, pool);
     }
   }, {
     key: "retry",
@@ -29831,12 +30069,24 @@ var Game = (function () {
   }, {
     key: "tiles",
     value: function tiles() {
-      return this._tileContainer.tiles();
+      return this.state.tiles ? this.state.tiles() : this._tileContainer.tiles();
     }
   }, {
     key: "appeals",
     value: function appeals() {
       return this.state.appeals();
+    }
+  }, {
+    key: "pause",
+    value: function pause() {
+      console.log("pause");
+      this.state.pause(Date.now());
+    }
+  }, {
+    key: "resume",
+    value: function resume() {
+      console.log("resume");
+      this.state.resume(Date.now());
     }
   }]);
 
@@ -29846,7 +30096,7 @@ var Game = (function () {
 exports["default"] = Game;
 module.exports = exports["default"];
 
-},{"javascript-state-machine":25,"models/Color":207,"models/ColorMaster":208,"models/Hint":209,"models/Pool":210,"models/PrefixStorage":211,"models/Rand":212,"models/Tile":213,"models/TileContainer":214,"models/Timer":215,"models/game/states/Finished":217,"models/game/states/Init":218,"models/game/states/Started":219,"models/score/Score":220,"models/score/ScoreTable":221,"wu":193}],217:[function(require,module,exports){
+},{"javascript-state-machine":25,"models/Color":210,"models/Hint":211,"models/Pool":212,"models/PrefixStorage":213,"models/Rand":214,"models/Tile":215,"models/TileContainer":216,"models/Timer":217,"models/game/states/Finished":219,"models/game/states/Init":220,"models/game/states/Pausing":221,"models/game/states/Started":222,"models/score/Score":225,"models/score/ScoreTable":226,"wu":193}],219:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29883,6 +30133,12 @@ var Finished = (function () {
   }, {
     key: "timeup",
     value: function timeup() {}
+  }, {
+    key: "pause",
+    value: function pause() {}
+  }, {
+    key: "resume",
+    value: function resume() {}
   }]);
 
   return Finished;
@@ -29891,7 +30147,7 @@ var Finished = (function () {
 exports["default"] = Finished;
 module.exports = exports["default"];
 
-},{}],218:[function(require,module,exports){
+},{}],220:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29933,6 +30189,12 @@ var Init = (function () {
   }, {
     key: "timeup",
     value: function timeup() {}
+  }, {
+    key: "pause",
+    value: function pause() {}
+  }, {
+    key: "resume",
+    value: function resume() {}
   }]);
 
   return Init;
@@ -29941,7 +30203,85 @@ var Init = (function () {
 exports["default"] = Init;
 module.exports = exports["default"];
 
-},{}],219:[function(require,module,exports){
+},{}],221:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _modelsMasterColorMaster = require("models/master/ColorMaster");
+
+var _modelsMasterColorMaster2 = _interopRequireDefault(_modelsMasterColorMaster);
+
+var _modelsTile = require("models/Tile");
+
+var _modelsTile2 = _interopRequireDefault(_modelsTile);
+
+var _wu = require("wu");
+
+var _wu2 = _interopRequireDefault(_wu);
+
+var Pausing = (function () {
+  function Pausing(game) {
+    _classCallCheck(this, Pausing);
+
+    this._game = game;
+    this._appeals = {};
+    var gray = _modelsMasterColorMaster2["default"].lightGray;
+    this._tiles = Array.from(_wu2["default"].count().take(game.size * game.size)).map(function () {
+      return new _modelsTile2["default"](gray);
+    });
+  }
+
+  _createClass(Pausing, [{
+    key: "select",
+    value: function select(cellId, now) {
+      return false;
+    }
+  }, {
+    key: "appeals",
+    value: function appeals() {
+      return this._appeals;
+    }
+  }, {
+    key: "retry",
+    value: function retry() {}
+  }, {
+    key: "timeup",
+    value: function timeup() {}
+  }, {
+    key: "tiles",
+    value: function tiles() {
+      return this._tiles;
+    }
+  }, {
+    key: "pause",
+    value: function pause() {}
+  }, {
+    key: "resume",
+    value: function resume(now) {
+      console.log("Pausing.resume");
+      var game = this._game;
+      game.timer.resume(now);
+      if (game.timer.is("Finished")) game._fsm.timeup();
+      if (game.timer.is("Running")) game._fsm.resume();
+    }
+  }]);
+
+  return Pausing;
+})();
+
+exports["default"] = Pausing;
+module.exports = exports["default"];
+
+},{"models/Tile":215,"models/master/ColorMaster":223,"wu":193}],222:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29970,7 +30310,6 @@ var Started = (function () {
       }
 
       game.timer.add(now, -1500);
-      game.timeup(now);
       return false;
     }
   }, {
@@ -29985,8 +30324,20 @@ var Started = (function () {
     key: "timeup",
     value: function timeup(now) {
       var game = this._game;
-      if (game.timer.isFinished(now)) game._fsm.timeup();
+      game.timer.timeup(now);
+      if (game.timer.is("Finished")) game._fsm.timeup();
     }
+  }, {
+    key: "pause",
+    value: function pause(now) {
+      var game = this._game;
+      game.timer.pause(now);
+      if (game.timer.is("Finished")) game._fsm.timeup();
+      if (game.timer.is("Pausing")) game._fsm.pause();
+    }
+  }, {
+    key: "resume",
+    value: function resume() {}
   }]);
 
   return Started;
@@ -29995,7 +30346,113 @@ var Started = (function () {
 exports["default"] = Started;
 module.exports = exports["default"];
 
-},{}],220:[function(require,module,exports){
+},{}],223:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+var _modelsColor = require("models/Color");
+
+var _modelsColor2 = _interopRequireDefault(_modelsColor);
+
+var f = function f(r, g, b) {
+  return new _modelsColor2["default"](r * 0x10000 + g * 0x100 + b);
+};
+
+exports["default"] = {
+  red: f(255, 40, 0),
+  yellow: f(250, 245, 0),
+  green: f(53, 161, 107),
+  blue: f(0, 65, 255),
+  sky: f(102, 204, 255),
+  pink: f(255, 153, 160),
+  orange: f(255, 153, 0),
+  purple: f(153, 0, 121),
+  brown: f(102, 51, 0),
+
+  lightPink: f(255, 209, 209),
+  cream: f(255, 255, 153),
+  lightYellowGreen: f(203, 242, 102),
+  lightSky: f(180, 235, 250),
+  beige: f(237, 197, 143),
+  lightGreen: f(135, 231, 176),
+  lightPurple: f(199, 178, 222),
+
+  white: f(255, 255, 255),
+  lightGray: f(200, 200, 203),
+  gray: f(127, 135, 143),
+  black: f(0, 0, 0)
+};
+module.exports = exports["default"];
+
+},{"models/Color":210}],224:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+var _modelsMasterColorMaster = require("models/master/ColorMaster");
+
+var _modelsMasterColorMaster2 = _interopRequireDefault(_modelsMasterColorMaster);
+
+var _modelsColor = require("models/Color");
+
+var _modelsColor2 = _interopRequireDefault(_modelsColor);
+
+var _modelsTile = require("models/Tile");
+
+var _modelsTile2 = _interopRequireDefault(_modelsTile);
+
+var _wu = require("wu");
+
+var _wu2 = _interopRequireDefault(_wu);
+
+var cm = _modelsMasterColorMaster2["default"];
+
+var colors3 = [cm.red, cm.yellow, cm.green, cm.blue, cm.sky, cm.pink, cm.orange, cm.purple, cm.brown, cm.lightYellowGreen, cm.lightSky, cm.beige, cm.lightPurple, cm.lightGray, cm.gray, cm.black];
+
+var colors4 = [cm.red, cm.yellow, cm.green, cm.blue, cm.sky, cm.pink, cm.orange, cm.purple, cm.brown, cm.beige, cm.lightGray, cm.gray, cm.black];
+
+var colors5 = [cm.red, cm.yellow, cm.green, cm.blue, cm.sky, cm.pink, cm.orange, cm.purple, cm.brown, cm.lightPink, cm.cream, cm.lightYellowGreen, cm.lightSky, cm.beige, cm.lightGreen, cm.lightPurple, cm.white, cm.lightGray, cm.gray, cm.black];
+
+var colorsGray = [cm.black, cm.white];
+
+var nums = "0123456789";
+var jap = "㌀㌁㌂㌃㌄㌅㌆㌇㌈㌉㌊㌋㌌㌍㌎㌏㌐㌑㌒㌓㌔㌕㌖㌗㌘㌙㌚㌛㌜㌝㌞㌟㌠㌡㌢㌣㌤㌥㌦㌧㌨㌩㌪㌫㌬㌭㌮㌯㌰㌱㌲㌳㌴㌵㌶㌷㌸㌹㌺㌻㌼㌽㌾㌿㍀㍁㍂㍃㍄㍅㍆㍇㍈㍉㍊㍋㍌㍍㍎㍏㍐㍑㍒㍓㍔㍕㍖㍗㍿";
+var yi = "ꀀꀁꀂꀃꀄꀅꀆꀇꀈꀉꀊꀋꀌꀍꀎꀏꀐꀑꀒꀓꀔꀕꀖꀗꀘꀙꀚꀛꀜꀝꀞꀟꀠꀡꀢꀣꀤꀥꀦꀧꀨꀩꀪꀫꀬꀭꀮꀯꀰꀱꀲꀳꀴꀵꀶꀷꀸꀹꀺꀻꀼꀽꀾꀿꁀꁁꁂꁃꁄꁅꁆꁇꁈꁉꁊꁋꁌꁍꁎꁏꁐꁑꁒꁓꁔꁕꁖꁗꁘꁙꁚꁛꁜꁝꁞꁟꁠꁡꁢꁣꁤꁥꁦꁧꁨꁩꁪꁫꁬꁭꁮꁯꁰꁱꁲꁳꁴꁵꁶꁷꁸꁹꁺꁻꁼꁽꁾꁿꂀꂁꂂꂃꂄꂅꂆꂇꂈꂉꂊꂋꂌꂍꂎꂏꂐꂑꂒꂓꂔꂕꂖꂗꂘꂙꂚꂛꂜꂝꂞꂟꂠꂡꂢꂣꂤꂥꂦꂧꂨꂩꂪꂫꂬꂭꂮꂯꂰꂱꂲꂳꂴꂵꂶꂷꂸꂹꂺꂻꂼꂽꂾꂿꃀꃁꃂꃃꃄꃅꃆꃇꃈꃉꃊꃋꃌꃍꃎꃏꃐꃑꃒꃓꃔꃕꃖꃗꃘꃙꃚꃛꃜꃝꃞꃟꃠꃡꃢꃣꃤꃥꃦꃧꃨꃩꃪꃫꃬꃭꃮꃯꃰꃱꃲꃳꃴꃵꃶꃷꃸꃹꃺꃻꃼꃽꃾꃿꄀꄁꄂꄃꄄꄅꄆꄇꄈꄉꄊꄋꄌꄍꄎꄏꄐꄑꄒꄓꄔꄕꄖꄗꄘꄙꄚꄛꄜꄝꄞꄟꄠꄡꄢꄣꄤꄥꄦꄧꄨꄩꄪꄫꄬꄭꄮꄯꄰꄱꄲꄳꄴꄵꄶꄷꄸꄹꄺꄻꄼꄽꄾꄿꅀꅁꅂꅃꅄꅅꅆꅇꅈꅉꅊꅋꅌꅍꅎꅏꅐꅑꅒꅓꅔꅕꅖꅗꅘꅙꅚꅛꅜꅝꅞꅟꅠꅡꅢꅣꅤꅥꅦꅧꅨꅩꅪꅫꅬꅭꅮꅯꅰꅱꅲꅳꅴꅵꅶꅷꅸꅹꅺꅻꅼꅽꅾꅿꆀꆁꆂꆃꆄꆅꆆꆇꆈꆉꆊꆋꆌꆍꆎꆏꆐꆑꆒꆓꆔꆕꆖꆗꆘꆙꆚꆛꆜꆝꆞꆟꆠꆡꆢꆣꆤꆥꆦꆧꆨꆩꆪꆫꆬꆭꆮꆯꆰꆱꆲꆳꆴꆵꆶꆷꆸꆹꆺꆻꆼꆽꆾꆿꇀꇁꇂꇃꇄꇅꇆꇇꇈꇉꇊꇋꇌꇍꇎꇏꇐꇑꇒꇓꇔꇕꇖꇗꇘꇙꇚꇛꇜꇝꇞꇟꇠꇡꇢꇣꇤꇥꇦꇧꇨꇩꇪꇫꇬꇭꇮꇯꇰꇱꇲꇳ";
+
+var f = function f(colors, texts, types) {
+  return Array.from((0, _wu2["default"])(colors).map(function (color) {
+    return (0, _wu2["default"])(texts).map(function (text) {
+      return (0, _wu2["default"])(types).map(function (type) {
+        var borderColor = color.isWhite() ? new _modelsColor2["default"](0) : color;
+        return new _modelsTile2["default"](color, borderColor, text, type);
+      });
+    });
+  }).flatten());
+};
+
+var levels = {
+  3: [f(colors3, [""], ["square"]), f(colors3, [""], ["square", "circle"]), f(colors3, nums, ["square", "circle"]), f(colors3, jap, ["square", "circle"]), f(colorsGray, yi, ["square"])],
+  4: [f(colors4, [""], ["square", "circle"]), f(colors4, nums, ["square", "circle"]), f(colors4, jap, ["square", "circle"])],
+  5: [f(colors5, [""], ["square", "circle"]), f(colors5, nums, ["square", "circle"]), f(colors5, jap, ["square", "circle"]), f(colorsGray, yi, ["square"])]
+};
+
+exports["default"] = {
+  3: [{ level: 1, tileUpdationRule: [{ score: 0, tiles: levels[3][0] }, { score: 500, tiles: levels[3][1] }, { score: 1500, tiles: levels[3][2] }, { score: 3000, tiles: levels[3][3] }, { score: 5000, tiles: levels[3][4] }] }],
+  4: [{ level: 1, tileUpdationRule: [{ score: 0, tiles: levels[4][0] }, { score: 1000, tiles: levels[4][1] }, { score: 3000, tiles: levels[4][2] }] }],
+  5: [{ level: 1, tileUpdationRule: [{ score: 0, tiles: levels[5][0] }, { score: 500, tiles: levels[5][1] }, { score: 1500, tiles: levels[5][2] }] }]
+};
+module.exports = exports["default"];
+
+},{"models/Color":210,"models/Tile":215,"models/master/ColorMaster":223,"wu":193}],225:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30033,19 +30490,24 @@ var bestIcons = {
 };
 
 var Score = (function () {
-  function Score(storage) {
+  function Score(num, storage) {
     _classCallCheck(this, Score);
 
-    var best = 1 * storage.getItem("best");
     this._storage = storage;
+    this._num = num;
     this.current = new _modelsScoreScoreValue2["default"](0, scoreIcons.table, scoreIcons.last);
-    this.best = new _modelsScoreScoreValue2["default"](best, bestIcons.table, bestIcons.last);
+    this.best = new _modelsScoreScoreValue2["default"](0, bestIcons.table, bestIcons.last);
+    this.reset(num);
   }
 
   _createClass(Score, [{
     key: "reset",
-    value: function reset() {
+    value: function reset(num) {
+      this._num = num;
       this.current.update(0);
+      var best = 1 * this._storage.getItem("best-" + num);
+      this.best.update(best);
+      this._isNewRecord = false;
     }
   }, {
     key: "count",
@@ -30054,9 +30516,15 @@ var Score = (function () {
 
       this.current.update(this.current.value + n);
       if (this.best.value < this.current.value) {
+        this._isNewRecord = true;
         this.best.update(this.current.value);
-        this._storage.setItem("best", this.current.value);
+        this._storage.setItem("best-" + this._num, this.current.value);
       }
+    }
+  }, {
+    key: "isNewRecord",
+    value: function isNewRecord() {
+      return this._isNewRecord;
     }
   }]);
 
@@ -30066,7 +30534,7 @@ var Score = (function () {
 exports["default"] = Score;
 module.exports = exports["default"];
 
-},{"models/score/ScoreValue":222}],221:[function(require,module,exports){
+},{"models/score/ScoreValue":227}],226:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30100,7 +30568,7 @@ var ScoreTable = (function () {
 exports["default"] = ScoreTable;
 module.exports = exports["default"];
 
-},{}],222:[function(require,module,exports){
+},{}],227:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30145,7 +30613,7 @@ var ScoreValue = (function () {
 exports["default"] = ScoreValue;
 module.exports = exports["default"];
 
-},{}],223:[function(require,module,exports){
+},{}],228:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30173,4 +30641,4 @@ exports["default"] = function (d) {
 
 module.exports = exports["default"];
 
-},{}]},{},[206]);
+},{}]},{},[209]);
