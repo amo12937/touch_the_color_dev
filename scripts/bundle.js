@@ -28609,7 +28609,7 @@ var Tile = (function (_React$Component) {
       var tile = this.props.tile;
       return _react2["default"].createElement(
         "div",
-        { className: "tile " + tile.className, style: { backgroundColor: tile.borderColor } },
+        { className: "font tile " + tile.className, style: { backgroundColor: tile.borderColor } },
         _react2["default"].createElement(
           "div",
           { className: "tile_content", style: {
