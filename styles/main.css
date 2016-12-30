@@ -91,7 +91,7 @@ html, body {
   .app_content {
     padding-top: 0; }
   .game-over-inner {
-    padding-top: 47.5vmin; } }
+    padding-top: 52vmin; } }
 
 .logo {
   width: 76vmin;
@@ -107,37 +107,37 @@ html, body {
   height: 100%; }
 
 .board {
-  width: 81vmin;
-  height: 81vmin;
+  width: 72vmin;
+  height: 72vmin;
   margin: 0 auto; }
 
 .board_row {
-  width: 81vmin;
-  height: 16.2vmin; }
+  width: 72vmin;
+  height: 14.4vmin; }
   .board_row.board_row-3 {
-    height: 27vmin; }
+    height: 24vmin; }
   .board_row.board_row-4 {
-    height: 20.25vmin; }
+    height: 18vmin; }
   .board_row.board_row-5 {
-    height: 16.2vmin; }
+    height: 14.4vmin; }
 
 .board_cell {
-  width: 14.2vmin;
-  height: 14.2vmin;
+  width: 12.4vmin;
+  height: 12.4vmin;
   float: left;
   position: relative;
   margin: 1vmin; }
   .board_cell.board_cell-3 {
-    width: 25vmin;
-    height: 25vmin;
+    width: 22vmin;
+    height: 22vmin;
     font-size: 12.5vmin; }
   .board_cell.board_cell-4 {
-    width: 18.25vmin;
-    height: 18.25vmin;
+    width: 16vmin;
+    height: 16vmin;
     font-size: 9.375vmin; }
   .board_cell.board_cell-5 {
-    width: 14.2vmin;
-    height: 14.2vmin;
+    width: 12.4vmin;
+    height: 12.4vmin;
     font-size: 7.5vmin; }
 
 .board_item-appear {
@@ -276,23 +276,28 @@ html, body {
 
 .timer {
   width: 77vmin;
-  height: 1vmin;
-  margin: 1vmin auto; }
+  height: 12vmin;
+  margin: 0 auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center; }
 
 .timer_back {
-  width: 100%;
-  height: 100%;
+  width: 64vmin;
+  height: 1vmin;
   background-color: #c8c8cb;
   border-radius: 0.5vmin;
+  margin-left: 4vmin;
   overflow: hidden; }
 
 .timer_front {
   width: 0%;
   height: 100%;
   background-color: #ff2800;
-  border-radius: 0.5vmin; }
-
-.timer_front-active {
+  border-radius: 0.5vmin;
   -webkit-animation-name: animation-timer-front;
           animation-name: animation-timer-front;
   -webkit-animation-timing-function: linear;
@@ -301,6 +306,14 @@ html, body {
           animation-iteration-count: 1;
   -webkit-animation-fill-mode: forwards;
           animation-fill-mode: forwards; }
+
+.timer_front-waiting {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused; }
+
+.timer_front-active {
+  -webkit-animation-play-state: running;
+          animation-play-state: running; }
 
 @-webkit-keyframes animation-timer-front {
   0% {
@@ -341,6 +354,15 @@ html, body {
   100% {
     width: 100%;
     background-color: #ff2800; } }
+
+.pause-button {
+  width: 8vmin;
+  height: 8vmin;
+  margin-left: 1vmin; }
+  .pause-button.pause-button-pause {
+    content: url(../images/pause.svg); }
+  .pause-button.pause-button-resume {
+    content: url(../images/resume.svg); }
 
 .hint_container {
   width: 46vmin;

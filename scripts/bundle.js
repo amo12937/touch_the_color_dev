@@ -28286,9 +28286,10 @@ var App = (function (_React$Component) {
 
     this.state = this.getState();
 
-    this.handleClick = this.handleClick.bind(this);
-    this.handleTimeup = this.handleTimeup.bind(this);
-    this.handleRetry = this.handleRetry.bind(this);
+    var self = this;
+    ["handleClick", "handleTimeup", "handleRetry", "handlePause", "handleResume"].forEach(function (key) {
+      self[key] = self[key].bind(self);
+    });
   }
 
   _createClass(App, [{
@@ -28317,6 +28318,18 @@ var App = (function (_React$Component) {
     key: "handleRetry",
     value: function handleRetry() {
       this.game.retry();
+      this.setState(this.getState());
+    }
+  }, {
+    key: "handlePause",
+    value: function handlePause() {
+      this.game.pause();
+      this.setState(this.getState());
+    }
+  }, {
+    key: "handleResume",
+    value: function handleResume() {
+      this.game.resume();
       this.setState(this.getState());
     }
   }, {
@@ -28352,7 +28365,9 @@ var App = (function (_React$Component) {
             gameStates: this.state.gameStates,
             now: Date.now(),
             timer: this.state.timer,
-            onTimeup: this.handleTimeup
+            onTimeup: this.handleTimeup,
+            onPause: this.handlePause,
+            onResume: this.handleResume
           }),
           _react2["default"].createElement(_componentsBoardBoard2["default"], {
             num_of_rows: this.state.num,
@@ -28381,7 +28396,7 @@ var App = (function (_React$Component) {
 exports["default"] = App;
 module.exports = exports["default"];
 
-},{"components/GameOver":195,"components/Logo":196,"components/ScoreHintContainer":197,"components/Timer":199,"components/board/Board":200,"models/game/Game":218,"models/master/LevelMaster":223,"react":192,"react-addons-css-transition-group":28}],195:[function(require,module,exports){
+},{"components/GameOver":195,"components/Logo":196,"components/ScoreHintContainer":197,"components/Timer":199,"components/board/Board":200,"models/game/Game":218,"models/master/LevelMaster":224,"react":192,"react-addons-css-transition-group":28}],195:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28688,16 +28703,50 @@ var TimerWaiting = (function (_React$Component2) {
   _createClass(TimerWaiting, [{
     key: "render",
     value: function render() {
-      var width = this.props.gameState == this.props.gameStates.INIT ? 0 : 100;
-      return _react2["default"].createElement("div", { className: "timer_front", style: { width: "" + width + "%" } });
+      var now = this.props.now;
+      var timer = this.props.timer;
+      return _react2["default"].createElement("div", { className: "timer_front timer_front-waiting", style: {
+          animationDuration: timer.max + "ms",
+          animationDelay: "-" + timer.elapsedTime(now) + "ms"
+        } });
     }
   }]);
 
   return TimerWaiting;
 })(_react2["default"].Component);
 
-var Timer = (function (_React$Component3) {
-  _inherits(Timer, _React$Component3);
+var PauseButton = (function (_React$Component3) {
+  _inherits(PauseButton, _React$Component3);
+
+  function PauseButton(props) {
+    _classCallCheck(this, PauseButton);
+
+    _get(Object.getPrototypeOf(PauseButton.prototype), "constructor", this).call(this, props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  _createClass(PauseButton, [{
+    key: "handleClick",
+    value: function handleClick() {
+      var timer = this.props.timer;
+      if (timer.is("Running")) this.props.onPause();else if (timer.is("Pausing")) this.props.onResume();
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var timer = this.props.timer;
+      var classes = ["pause-button"];
+      if (timer.is("Running")) classes.push("pause-button-pause");else if (timer.is("Pausing")) classes.push("pause-button-resume");else classes.push("pause-button-waiting");
+
+      return _react2["default"].createElement("div", { className: classes.join(" "), onClick: this.handleClick });
+    }
+  }]);
+
+  return PauseButton;
+})(_react2["default"].Component);
+
+var Timer = (function (_React$Component4) {
+  _inherits(Timer, _React$Component4);
 
   function Timer() {
     _classCallCheck(this, Timer);
@@ -28713,9 +28762,7 @@ var Timer = (function (_React$Component3) {
       var child = this.props.gameState == this.props.gameStates.STARTED ? _react2["default"].createElement(TimerActive, {
         key: Math.random(),
         now: now, timer: timer,
-        onTimeup: this.props.onTimeup }) : _react2["default"].createElement(TimerWaiting, {
-        gameState: this.props.gameState,
-        gameStates: this.props.gameStates });
+        onTimeup: this.props.onTimeup }) : _react2["default"].createElement(TimerWaiting, { now: now, timer: timer });
 
       return _react2["default"].createElement(
         "div",
@@ -28724,7 +28771,10 @@ var Timer = (function (_React$Component3) {
           "div",
           { className: "timer_back" },
           child
-        )
+        ),
+        _react2["default"].createElement(PauseButton, { timer: timer,
+          onPause: this.props.onPause,
+          onResume: this.props.onResume })
       );
     }
   }]);
@@ -29378,7 +29428,7 @@ document.addEventListener("touchmove", function (e) {
   e.preventDefault();
 });
 
-},{"./components/App":194,"./prevent_zoom":227,"react":192,"react-dom":30}],210:[function(require,module,exports){
+},{"./components/App":194,"./prevent_zoom":228,"react":192,"react-dom":30}],210:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29710,87 +29760,125 @@ module.exports = exports["default"];
 },{"wu":193}],217:[function(require,module,exports){
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _javascriptStateMachine = require("javascript-state-machine");
+
+var _javascriptStateMachine2 = _interopRequireDefault(_javascriptStateMachine);
+
 /*
  *  waiting    | running                      | finished
  * ------------|------------*-----------------|------------
  *             `startTime   `currentTime      `endTime
  */
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+var Timer = function Timer(max) {
+  var _this = this;
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+  _classCallCheck(this, Timer);
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  this.max = max;
+  var startTime, endTime, pauseTime;
 
-var Timer = (function () {
-  function Timer(max) {
-    _classCallCheck(this, Timer);
+  var setSpan = function setSpan(n) {
+    startTime = n;
+    endTime = n + max;
+  };
 
-    this.max = max;
-    this.reset();
-  }
+  var fsm = _javascriptStateMachine2["default"].create({
+    initial: "Waiting",
+    events: [{ name: "start", from: "Waiting", to: "Running" }, { name: "add", from: "Running", to: "Running" }, { name: "pause", from: "Running", to: "Pausing" }, { name: "resume", from: "Pausing", to: "Running" }, { name: "timeup", from: "Running", to: "Finished" }, { name: "reset", from: "Finished", to: "Waiting" }],
+    callbacks: {
+      onWaiting: function onWaiting() {
+        setSpan(Infinity);
+      },
+      onstart: function onstart(ev, f, t, now) {
+        setSpan(now);
+      },
+      onadd: function onadd(ev, f, t, now, msec) {
+        setSpan(Math.min(startTime + msec, now));
+      },
+      onbeforepause: function onbeforepause(ev, f, t, now) {
+        return startTime <= now;
+      },
+      onenterPausing: function onenterPausing(ev, f, t, now) {
+        pauseTime = now;
+      },
+      onleavePausing: function onleavePausing(ev, f, t, now) {
+        setSpan(startTime + now - pauseTime);
+        pauseTime = null;
+      },
+      onbeforetimeup: function onbeforetimeup(ev, f, t, now) {
+        return endTime <= now;
+      }
+    }
+  });
 
-  _createClass(Timer, [{
-    key: "start",
-    value: function start(startTime) {
-      if (this.isRunning(startTime)) return;
-      this.restart(startTime);
+  var elapsedTime = {
+    Waiting: function Waiting() {
+      return 0;
+    },
+    Running: function Running(now) {
+      return Math.min(max, Math.max(0, now - startTime));
+    },
+    Pausing: function Pausing(now) {
+      return elapsedTime.Running(Math.min(now, pauseTime));
+    },
+    Finished: function Finished() {
+      return max;
     }
-  }, {
-    key: "restart",
-    value: function restart(startTime) {
-      this.startTime = startTime;
-      this.endTime = startTime + this.max;
-    }
-  }, {
-    key: "reset",
-    value: function reset() {
-      this.restart(Infinity);
-    }
-  }, {
-    key: "add",
-    value: function add(currentTime, msec) {
-      if (!this.isRunning(currentTime)) return false;
-      this.restart(Math.min(this.startTime + msec, currentTime));
+  };
 
-      return this.isRunning(currentTime);
-    }
-  }, {
-    key: "isRunning",
-    value: function isRunning(currentTime) {
-      return this.startTime <= currentTime && currentTime < this.endTime;
-    }
-  }, {
-    key: "isFinished",
-    value: function isFinished(currentTime) {
-      return this.endTime <= currentTime;
-    }
-  }, {
-    key: "elapsedTime",
-    value: function elapsedTime(currentTime) {
-      return Math.min(this.max, Math.max(0, currentTime - this.startTime));
-    }
-  }, {
-    key: "remain",
-    value: function remain(currentTime) {
-      return this.max - this.elapsedTime(currentTime);
-    }
-  }, {
-    key: "percent",
-    value: function percent(currentTime) {
-      return Math.floor(100 * this.elapsedTime(currentTime) / this.max);
-    }
-  }]);
+  this.elapsedTime = function (now) {
+    return elapsedTime[fsm.current](now);
+  };
+  this.remain = function (now) {
+    return max - _this.elapsedTime(now);
+  };
+  this.percent = function (now) {
+    return Math.floor(100 * _this.elapsedTime(now) / max);
+  };
 
-  return Timer;
-})();
+  var run = function run(ev) {
+    return function () {
+      return fsm.can(ev) && fsm[ev].apply(fsm, arguments);
+    };
+  };
+
+  this.start = run("start");
+  this.add = function (now, msec) {
+    _this.timeup(now);
+    run("add")(now, msec);
+    _this.timeup(now);
+  };
+  this.pause = function (now) {
+    _this.timeup(now);
+    return run("pause")(now);
+  };
+  this.resume = run("resume");
+  this.timeup = run("timeup");
+  this.reset = run("reset");
+  this.currentState = function () {
+    return fsm.current;
+  };
+  this.is = function (s) {
+    return fsm.is(s);
+  };
+  this.can = function (e) {
+    return fsm.can(e);
+  };
+};
 
 exports["default"] = Timer;
 module.exports = exports["default"];
 
-},{}],218:[function(require,module,exports){
+},{"javascript-state-machine":25}],218:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29859,6 +29947,10 @@ var _modelsGameStatesStarted = require("models/game/states/Started");
 
 var _modelsGameStatesStarted2 = _interopRequireDefault(_modelsGameStatesStarted);
 
+var _modelsGameStatesPausing = require("models/game/states/Pausing");
+
+var _modelsGameStatesPausing2 = _interopRequireDefault(_modelsGameStatesPausing);
+
 var _modelsGameStatesFinished = require("models/game/states/Finished");
 
 var _modelsGameStatesFinished2 = _interopRequireDefault(_modelsGameStatesFinished);
@@ -29870,11 +29962,13 @@ var Game = (function () {
     this.timer = new _modelsTimer2["default"](5000);
 
     var storage = new _modelsPrefixStorage2["default"](localStorage, "touch_the_color/");
-    this.score = new _modelsScoreScore2["default"](this.currentNum, storage);
+    this.score = new _modelsScoreScore2["default"](size, storage);
+    this.size = size;
 
     this.states = {
       INIT: new _modelsGameStatesInit2["default"](this),
       STARTED: new _modelsGameStatesStarted2["default"](this),
+      PAUSING: new _modelsGameStatesPausing2["default"](this),
       FINISHED: new _modelsGameStatesFinished2["default"](this)
     };
 
@@ -29882,7 +29976,7 @@ var Game = (function () {
 
     var fsm = _javascriptStateMachine2["default"].create({
       initial: "Init",
-      events: [{ name: "start", from: "Init", to: "Started" }, { name: "timeup", from: "Started", to: "Finished" }, { name: "retry", from: "Finished", to: "Init" }],
+      events: [{ name: "start", from: "Init", to: "Started" }, { name: "pause", from: "Started", to: "Pausing" }, { name: "resume", from: "Pausing", to: "Started" }, { name: "timeup", from: "Started", to: "Finished" }, { name: "retry", from: "Finished", to: "Init" }],
       callbacks: {
         onInit: function onInit() {
           self.score.reset(size);
@@ -29893,9 +29987,15 @@ var Game = (function () {
           self._tileContainer = self._makeTileContainer(size, self._tileUpdationRule.shift().pool);
           self.state = self.states.INIT;
         },
-        onStarted: function onStarted() {
+        onstart: function onstart() {
           self.timer.start(Date.now());
+        },
+        onStarted: function onStarted() {
+          console.log("onStarted");
           self.state = self.states.STARTED;
+        },
+        onPausing: function onPausing() {
+          self.state = self.states.PAUSING;
         },
         onFinished: function onFinished() {
           return self.state = self.states.FINISHED;
@@ -29969,12 +30069,24 @@ var Game = (function () {
   }, {
     key: "tiles",
     value: function tiles() {
-      return this._tileContainer.tiles();
+      return this.state.tiles ? this.state.tiles() : this._tileContainer.tiles();
     }
   }, {
     key: "appeals",
     value: function appeals() {
       return this.state.appeals();
+    }
+  }, {
+    key: "pause",
+    value: function pause() {
+      console.log("pause");
+      this.state.pause(Date.now());
+    }
+  }, {
+    key: "resume",
+    value: function resume() {
+      console.log("resume");
+      this.state.resume(Date.now());
     }
   }]);
 
@@ -29984,7 +30096,7 @@ var Game = (function () {
 exports["default"] = Game;
 module.exports = exports["default"];
 
-},{"javascript-state-machine":25,"models/Color":210,"models/Hint":211,"models/Pool":212,"models/PrefixStorage":213,"models/Rand":214,"models/Tile":215,"models/TileContainer":216,"models/Timer":217,"models/game/states/Finished":219,"models/game/states/Init":220,"models/game/states/Started":221,"models/score/Score":224,"models/score/ScoreTable":225,"wu":193}],219:[function(require,module,exports){
+},{"javascript-state-machine":25,"models/Color":210,"models/Hint":211,"models/Pool":212,"models/PrefixStorage":213,"models/Rand":214,"models/Tile":215,"models/TileContainer":216,"models/Timer":217,"models/game/states/Finished":219,"models/game/states/Init":220,"models/game/states/Pausing":221,"models/game/states/Started":222,"models/score/Score":225,"models/score/ScoreTable":226,"wu":193}],219:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30021,6 +30133,12 @@ var Finished = (function () {
   }, {
     key: "timeup",
     value: function timeup() {}
+  }, {
+    key: "pause",
+    value: function pause() {}
+  }, {
+    key: "resume",
+    value: function resume() {}
   }]);
 
   return Finished;
@@ -30071,6 +30189,12 @@ var Init = (function () {
   }, {
     key: "timeup",
     value: function timeup() {}
+  }, {
+    key: "pause",
+    value: function pause() {}
+  }, {
+    key: "resume",
+    value: function resume() {}
   }]);
 
   return Init;
@@ -30080,6 +30204,84 @@ exports["default"] = Init;
 module.exports = exports["default"];
 
 },{}],221:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _modelsMasterColorMaster = require("models/master/ColorMaster");
+
+var _modelsMasterColorMaster2 = _interopRequireDefault(_modelsMasterColorMaster);
+
+var _modelsTile = require("models/Tile");
+
+var _modelsTile2 = _interopRequireDefault(_modelsTile);
+
+var _wu = require("wu");
+
+var _wu2 = _interopRequireDefault(_wu);
+
+var Pausing = (function () {
+  function Pausing(game) {
+    _classCallCheck(this, Pausing);
+
+    this._game = game;
+    this._appeals = {};
+    var gray = _modelsMasterColorMaster2["default"].lightGray;
+    this._tiles = Array.from(_wu2["default"].count().take(game.size * game.size)).map(function () {
+      return new _modelsTile2["default"](gray);
+    });
+  }
+
+  _createClass(Pausing, [{
+    key: "select",
+    value: function select(cellId, now) {
+      return false;
+    }
+  }, {
+    key: "appeals",
+    value: function appeals() {
+      return this._appeals;
+    }
+  }, {
+    key: "retry",
+    value: function retry() {}
+  }, {
+    key: "timeup",
+    value: function timeup() {}
+  }, {
+    key: "tiles",
+    value: function tiles() {
+      return this._tiles;
+    }
+  }, {
+    key: "pause",
+    value: function pause() {}
+  }, {
+    key: "resume",
+    value: function resume(now) {
+      console.log("Pausing.resume");
+      var game = this._game;
+      game.timer.resume(now);
+      if (game.timer.is("Finished")) game._fsm.timeup();
+      if (game.timer.is("Running")) game._fsm.resume();
+    }
+  }]);
+
+  return Pausing;
+})();
+
+exports["default"] = Pausing;
+module.exports = exports["default"];
+
+},{"models/Tile":215,"models/master/ColorMaster":223,"wu":193}],222:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30108,7 +30310,6 @@ var Started = (function () {
       }
 
       game.timer.add(now, -1500);
-      game.timeup(now);
       return false;
     }
   }, {
@@ -30123,8 +30324,20 @@ var Started = (function () {
     key: "timeup",
     value: function timeup(now) {
       var game = this._game;
-      if (game.timer.isFinished(now)) game._fsm.timeup();
+      game.timer.timeup(now);
+      if (game.timer.is("Finished")) game._fsm.timeup();
     }
+  }, {
+    key: "pause",
+    value: function pause(now) {
+      var game = this._game;
+      game.timer.pause(now);
+      if (game.timer.is("Finished")) game._fsm.timeup();
+      if (game.timer.is("Pausing")) game._fsm.pause();
+    }
+  }, {
+    key: "resume",
+    value: function resume() {}
   }]);
 
   return Started;
@@ -30133,7 +30346,7 @@ var Started = (function () {
 exports["default"] = Started;
 module.exports = exports["default"];
 
-},{}],222:[function(require,module,exports){
+},{}],223:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30176,7 +30389,7 @@ exports["default"] = {
 };
 module.exports = exports["default"];
 
-},{"models/Color":210}],223:[function(require,module,exports){
+},{"models/Color":210}],224:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30239,7 +30452,7 @@ exports["default"] = {
 };
 module.exports = exports["default"];
 
-},{"models/Color":210,"models/Tile":215,"models/master/ColorMaster":222,"wu":193}],224:[function(require,module,exports){
+},{"models/Color":210,"models/Tile":215,"models/master/ColorMaster":223,"wu":193}],225:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30321,7 +30534,7 @@ var Score = (function () {
 exports["default"] = Score;
 module.exports = exports["default"];
 
-},{"models/score/ScoreValue":226}],225:[function(require,module,exports){
+},{"models/score/ScoreValue":227}],226:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30355,7 +30568,7 @@ var ScoreTable = (function () {
 exports["default"] = ScoreTable;
 module.exports = exports["default"];
 
-},{}],226:[function(require,module,exports){
+},{}],227:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30400,7 +30613,7 @@ var ScoreValue = (function () {
 exports["default"] = ScoreValue;
 module.exports = exports["default"];
 
-},{}],227:[function(require,module,exports){
+},{}],228:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
